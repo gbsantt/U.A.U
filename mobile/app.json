@@ -1,34 +1,39 @@
 {
   "expo": {
-    "name": "HospEasy",
-    "slug": "mobile",
+    "name": "UAU",
+    "slug": "uau",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "primaryColor": "#438F0B",
+    "icon": "./assets/uau-logo.jpg",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundColor": "#F2E3C4",
+        "foregroundImage": "./assets/uau-logo.jpg"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.anonymous.mobile",
       "allowBackup": false
     },
     "web": {
-      "name": "HospEasy",
+      "name": "UAU",
       "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/uau-logo.jpg"
     },
     "plugins": [
       "@maplibre/maplibre-react-native",
-      "expo-secure-store"
+      "expo-secure-store",
+      ["expo-splash-screen", {
+        "backgroundColor": "#F2E3C4",
+        "image": "./assets/uau-logo.jpg",
+        "imageWidth": 320,
+        "resizeMode": "contain"
+      }]
     ]
   }
 }

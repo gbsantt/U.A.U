@@ -1,12 +1,10 @@
+import { Text } from "./Typography";
 import {
     useEffect,
     useState,
 } from "react";
 
-import {
-    Text,
-    View,
-} from "react-native";
+import { View } from "react-native";
 
 import * as Clipboard from "expo-clipboard";
 

@@ -33,8 +33,8 @@
 - `mobile/src/context/AuthContext.tsx`, `mobile/src/service/sessionStorage.web.ts`
 - `mobile/src/context/ThemeContext.tsx`, `mobile/src/theme/colors.ts`, `mobile/src/components/ScreenLayout.tsx`
 - `mobile/src/screens/ProfileScreen.tsx`, `mobile/src/screens/UnitScreen.tsx`
-- `mobile/src/components/AddressSearch.tsx`, `LocationPicker.tsx`, `LocationPicker.native.tsx`, `HospEasyMap.web.tsx`
-- `src/main/java/com/hospeasy/backend/service/RelatorioUnidadeService.java`, `GeocodificacaoService.java`, `SituacaoUnidadeService.java`, `JwtService.java`
+- `mobile/src/components/AddressSearch.tsx`, `LocationPicker.tsx`, `LocationPicker.native.tsx`, `UAUMap.web.tsx`
+- `src/main/java/com/uau/backend/service/RelatorioUnidadeService.java`, `GeocodificacaoService.java`, `SituacaoUnidadeService.java`, `JwtService.java`
 - Controllers de relatório/geocodificação, `SecurityConfig.java`, `RequestRateLimitFilter.java`, `HistoricoOcupacaoRepository.java`
 - `src/main/resources/db/migration/V5__indice_historico_recente.sql`
 

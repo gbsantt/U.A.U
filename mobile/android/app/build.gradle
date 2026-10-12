@@ -81,7 +81,7 @@ def enableMinifyInReleaseBuilds = (findProperty('android.enableMinifyInReleaseBu
  */
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
-def signingNames = ['HOSPEASY_KEYSTORE_PATH','HOSPEASY_KEYSTORE_PASSWORD','HOSPEASY_KEY_ALIAS','HOSPEASY_KEY_PASSWORD']
+def signingNames = ['UAU_KEYSTORE_PATH','UAU_KEYSTORE_PASSWORD','UAU_KEY_ALIAS','UAU_KEY_PASSWORD']
 def signingValues = signingNames.collect { System.getenv(it) }
 if (signingValues.any { it } && !signingValues.every { it }) throw new GradleException('Configure todas as quatro variáveis de assinatura de release.')
 def hasReleaseSigning = signingValues.every { it }

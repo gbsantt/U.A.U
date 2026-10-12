@@ -5,7 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { colors as lightColors, darkColors } from "../theme/colors";
 
 type Mode = "light" | "dark";
-const KEY = "@hospeasy:theme";
+const KEY = "@uau:theme";
 const Context = createContext({ mode: "light" as Mode, colors: lightColors, setMode: async (_mode: Mode) => {} });
 export function ThemeProvider({ children }: { children: ReactNode }) {
     const [mode, updateMode] = useState<Mode>("light");

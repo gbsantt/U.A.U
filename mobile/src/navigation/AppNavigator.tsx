@@ -1,10 +1,11 @@
+import { Text } from "../components/Typography";
 import {NavigationContainer, getPathFromState, DefaultTheme, DarkTheme} from "@react-navigation/native";
 import {useTheme} from "../context/ThemeContext";
-import {useUI} from "../components/ScreenLayout";
+import BrandLoading from "../components/BrandLoading";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {useAuth} from "../context/AuthContext";
 import {ScreenLayout, Button, ErrorNotice} from "../components/ScreenLayout";
-import {Text, Platform} from "react-native";
+import { Platform } from "react-native";
 import {Avaliacao} from "../service/api";
 import {Unidade} from "../types/Unidade";
 import HomeScreen from "../screens/HomeScreen";
@@ -55,7 +56,7 @@ function publicState(state: any): any {
 }
 
 const linking = {
-    prefixes: [...(Platform.OS === "web" && typeof window !== "undefined" ? [window.location.origin + base] : []), "hospeasy://"],
+    prefixes: [...(Platform.OS === "web" && typeof window !== "undefined" ? [window.location.origin + base] : []), "uau://"],
     config: {
         path: Platform.OS === "web" ? base : undefined, initialRouteName: "Home" as const, screens: {
             Home: "",
@@ -86,13 +87,12 @@ const linking = {
 };
 export default function AppNavigator() {
     const {mode,colors}=useTheme();
-    const ui=useUI();
     const {usuario, carregandoSessao, erroSessao, revalidar, logout} = useAuth();
-    if (carregandoSessao) return <ScreenLayout title="HospEasy"><Text style={ui.text}>Validando sessão…</Text></ScreenLayout>;
+    if (carregandoSessao) return <BrandLoading message="Preparando seu acesso…" />;
     if (erroSessao && !usuario) return <ScreenLayout title="Validar sessão"><ErrorNotice message={erroSessao}/>
         <Button title="Tentar novamente" onPress={() => void revalidar()}/><Button title="Sair da conta" secondary
                                                                                    onPress={() => void logout()}/></ScreenLayout>;
-    return <NavigationContainer theme={{...(mode==="dark"?DarkTheme:DefaultTheme),colors:{...(mode==="dark"?DarkTheme:DefaultTheme).colors,background:colors.background,card:colors.surface,text:colors.text,border:colors.border,primary:colors.primary}}} linking={linking} documentTitle={{formatter: () => "HospEasy — Unidades de saúde"}}>
+    return <NavigationContainer theme={{...(mode==="dark"?DarkTheme:DefaultTheme),colors:{...(mode==="dark"?DarkTheme:DefaultTheme).colors,background:colors.background,card:colors.surface,text:colors.text,border:colors.border,primary:colors.primary}}} linking={linking} documentTitle={{formatter: () => "UAU — Unidades de saúde"}}>
         <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen name="Home" component={HomeScreen}/><Stack.Screen name="Unit" component={UnitScreen}/>
             <Stack.Screen name="Review" component={ReviewScreen}/><Stack.Screen name="Access" component={AccessScreen}/>

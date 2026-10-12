@@ -1,5 +1,6 @@
+import { Text } from "./Typography";
 import { useEffect, useRef, useState } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import { Button, ErrorNotice, Field, useUI } from "./ScreenLayout";
 import { useAuth } from "../context/AuthContext";
 import { pesquisarSugestoesEndereco, SugestaoEndereco } from "../service/api";

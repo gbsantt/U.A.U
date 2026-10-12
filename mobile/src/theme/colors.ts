@@ -1,5 +1,5 @@
 export const colors = {
-    // Identidade HospEasy
+    // Identidade UAU
     primary: "#438F0B",
     primaryDark: "#2F6807",
     primaryLight: "#E6F1DE",

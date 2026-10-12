@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');const vm=require('node:vm');const ts=require('typescript');
 const source=ts.transpileModule(fs.readFileSync('src/service/sessionStorage.web.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText;
 function storage(){const values=new Map();return {getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value),removeItem:key=>values.delete(key)};}
-const key='hospeasy.session.v2';
+const key='uau.session.v2';
 const token=exp=>'header.'+Buffer.from(JSON.stringify({exp})).toString('base64url')+'.signature';
 function runtime(local=storage(),session=storage()) {
  const context={exports:{},window:{localStorage:local,sessionStorage:session},atob,Date};vm.runInNewContext(source,context);return {api:context.exports,local,session};

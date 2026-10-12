@@ -43,7 +43,7 @@ export function AuthProvider({children}:{children:ReactNode}) {
     },[logout]);
     useEffect(()=>{
         const unsubscribe=onInvalidSession(token=>{if(current.current?.token===token) void logout();});
-        void AsyncStorage.removeItem("@hospeasy:sessao").catch(()=>{});
+        void AsyncStorage.removeItem("@uau:sessao").catch(()=>{});
         void revalidar();
         const listener=AppState.addEventListener("change",state=>{if(state==="active") void revalidar();});
         const unsubscribeStorage=onStoredSessionChange(()=>void revalidar());

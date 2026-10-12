@@ -1,13 +1,8 @@
+import { Text } from "./Typography";
 import { useTheme } from "../context/ThemeContext";
 import { useMemo as useThemeMemo } from "react";
 import { Palette } from "../theme/colors";
-import {
-    Platform,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 
 
 

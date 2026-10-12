@@ -1,4 +1,14 @@
-# HospEasy
+# UAU
+
+## Atualização do nome
+
+O projeto usa **UAU** nas telas, e-mails, relatórios e configurações; identificadores técnicos usam `uau` e variáveis específicas usam `UAU_*`.
+
+Em instalações existentes, atualize as variáveis da câmera e da assinatura Android do prefixo anterior para `UAU_*`, mantendo os mesmos valores. Os links do aplicativo agora usam `uau://`. Sessões anteriores precisam de um novo login e a preferência de tema volta ao padrão.
+
+O banco padrão de desenvolvimento agora se chama `uau`, e o banco isolado de integração, `uau_test`. Para continuar usando um banco existente, mantenha sua URL em `DB_URL`; esta alteração não renomeia bancos nem modifica seus dados. Preserve as chaves `JWT_SECRET` e `RECOVERY_SECRET` configuradas.
+
+A pasta local do checkout e artefatos antigos de build mantêm seus caminhos; o nome da pasta não define a marca do aplicativo. Gere novos builds para distribuir o novo nome.
 
 Aplicativo Android/Web para consulta de unidades de saúde, ocupação de áreas monitoradas, avaliações, favoritos, câmeras e suporte. Backend Spring Boot + PostgreSQL; frontend Expo/React Navigation/MapLibre; contador Python/YOLO. A contagem não representa tempo de espera nem orientação clínica.
 
@@ -12,14 +22,14 @@ Aplicativo Android/Web para consulta de unidades de saúde, ocupação de áreas
 
 ## Backend
 
-1. Crie um banco vazio `hospeasy` e um usuário próprio com permissão para criar/evoluir suas tabelas. Não use o usuário da escola/produção nos testes.
+1. Crie um banco vazio `uau` e um usuário próprio com permissão para criar/evoluir suas tabelas. Não use o usuário da escola/produção nos testes.
 2. Configure as variáveis abaixo no processo ou gerenciador de secrets. O backend **não carrega automaticamente um arquivo .env**. `.env.example` é uma referência.
 3. Execute `./mvnw spring-boot:run` (PowerShell: `.\mvnw.cmd spring-boot:run`).
 4. Para empacotar: `./mvnw clean verify`; para executar: `java -jar target/backend-0.0.1-SNAPSHOT.jar`.
 
 | Variável | Uso |
 | --- | --- |
-| DB_URL | JDBC PostgreSQL; desenvolvimento: jdbc:postgresql://localhost:5432/hospeasy |
+| DB_URL | JDBC PostgreSQL; desenvolvimento: jdbc:postgresql://localhost:5432/uau |
 | DB_USERNAME / DB_PASSWORD | Usuário e senha do banco; nunca versionar valores reais |
 | JWT_SECRET | Secret aleatório de pelo menos 32 bytes, exclusivo do servidor |
 | RECOVERY_SECRET | Secret aleatório independente de pelo menos 32 caracteres para HMAC dos códigos |
@@ -84,15 +94,15 @@ node scripts/serve-web.mjs
 
 O preview escuta somente 127.0.0.1:8081. O diretório `dist` contém a SPA e o worker MapLibre. A hospedagem real precisa servir arquivos existentes e direcionar as demais rotas ao index.html, preservando a URL. Não redirecione arquivos JS inexistentes para HTML.
 
-Para subdiretório, defina EXPO_PUBLIC_BASE_PATH com o prefixo, por exemplo `/hospeasy`, **antes de exportar** e use o mesmo prefixo no servidor. A configuração Expo e o worker compartilham esse valor. Exemplo PowerShell:
+Para subdiretório, defina EXPO_PUBLIC_BASE_PATH com o prefixo, por exemplo `/uau`, **antes de exportar** e use o mesmo prefixo no servidor. A configuração Expo e o worker compartilham esse valor. Exemplo PowerShell:
 
 ```powershell
-$env:EXPO_PUBLIC_BASE_PATH='/hospeasy'
+$env:EXPO_PUBLIC_BASE_PATH='/uau'
 npm run build:web
 node scripts/serve-web.mjs
 ```
 
-Abra /hospeasy/. React Navigation continua responsável pelo linking; não foi introduzido Expo Router. URLs usam apenas IDs; códigos de recuperação e objetos de usuário não são serializados em links. Refresh da recuperação reinicia o fluxo, por segurança.
+Abra /uau/. React Navigation continua responsável pelo linking; não foi introduzido Expo Router. URLs usam apenas IDs; códigos de recuperação e objetos de usuário não são serializados em links. Refresh da recuperação reinicia o fluxo, por segurança.
 
 A sessão nativa guarda somente o JWT no SecureStore. Na Web, somente o token é persistido em localStorage, com migração automática do sessionStorage anterior e revalidação no servidor. Tokens vencidos são removidos; a persistência não renova sua validade. O logout remove ambos os armazenamentos e é sincronizado entre abas. Não é cookie HttpOnly e continua sujeito a XSS: não introduza HTML não sanitizado nem scripts de terceiros não confiáveis. Favoritos são descartados na troca de conta. Erro 401 encerra sessão; 403 informa falta de permissão. Indisponibilidade temporária não remove o token nem desmonta a navegação de uma sessão já validada.
 
@@ -109,10 +119,10 @@ cd android
 
 Sem as quatro variáveis abaixo, o release é **unsigned**, não usa a assinatura debug. Para uma versão distribuível, configure um keystore real fora do repositório:
 
-- HOSPEASY_KEYSTORE_PATH
-- HOSPEASY_KEYSTORE_PASSWORD
-- HOSPEASY_KEY_ALIAS
-- HOSPEASY_KEY_PASSWORD
+- UAU_KEYSTORE_PATH
+- UAU_KEYSTORE_PASSWORD
+- UAU_KEY_ALIAS
+- UAU_KEY_PASSWORD
 
 Não há criação automática de keystore de produção. O manifesto principal recusa HTTP cleartext e desativa backup; o manifesto debug permite HTTP local. Defina EXPO_PUBLIC_API_URL=https://seu-endpoint-real **antes** de gerar release. O build sem essa URL valida compilação, mas o app informa configuração ausente quando tentar acessar a API.
 
@@ -126,11 +136,11 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-Use o modelo `yolov8n.onnx` incluído na pasta camera ou configure HOSPEASY_MODEL_PATH com um ONNX compatível. O cliente não baixa modelos. Caminhos relativos são resolvidos em relação à pasta camera. Instalação no Raspberry Pi OS 64 bits, exportação no PC e teste sem monitor: [guia da câmera](camera/README.md).
+Use o modelo `yolov8n.onnx` incluído na pasta camera ou configure UAU_MODEL_PATH com um ONNX compatível. O cliente não baixa modelos. Caminhos relativos são resolvidos em relação à pasta camera. Instalação no Raspberry Pi OS 64 bits, exportação no PC e teste sem monitor: [guia da câmera](camera/README.md).
 
 1. No painel ADMIN, abra Unidades → Dispositivos.
 2. Crie um dispositivo, copie a chave exibida **uma única vez** e guarde-a somente no dispositivo autorizado.
-3. Configure `camera/.env` a partir do exemplo com HOSPEASY_API_URL e HOSPEASY_CAMERA_KEY. Não há UNIDADE_ID, CAMERA_ID ou outro ID de banco.
+3. Configure `camera/.env` a partir do exemplo com UAU_API_URL e UAU_CAMERA_KEY. Não há UNIDADE_ID, CAMERA_ID ou outro ID de banco.
 4. Há no máximo uma câmera ativa por unidade. Desative a antiga antes de ativar a substituta. Dispositivo sem unidade é impedido por FK.
 5. Execute `python teste_camera.py` (teste local pelo terminal), `python teste_camera.py --salvar deteccao.jpg` (imagem marcada) ou `python main.py` (serviço de medição). `--mostrar` requer OpenCV com interface gráfica.
 6. Confirme última comunicação no painel. Chave revogada/inativa é recusada; regenerar invalida imediatamente a anterior. Após regenerar, atualize .env e reinicie o cliente; um dispositivo revogado continua inativo até ser ativado.
@@ -156,6 +166,6 @@ npm run typecheck
 npx expo install --check
 ```
 
-Os testes de integração exigem banco **local e exclusivo** chamado hospeasy_test. Configure TEST_DB_URL=jdbc:postgresql://127.0.0.1:PORTA/hospeasy_test e TEST_DB_USERNAME antes de `mvnw clean verify`. Cada execução cria schemas aleatórios, sem usar dados existentes; o usuário deve poder criar schemas. A senha deste ambiente isolado é vazia, usando PostgreSQL local com trust limitado a loopback. Sem TEST_DB_URL, integração é explicitamente ignorada; testes unitários continuam executando. Não interprete esse skip como aprovação da integração. Os schemas de teste são mantidos para inspeção.
+Os testes de integração exigem banco **local e exclusivo** chamado uau_test. Configure TEST_DB_URL=jdbc:postgresql://127.0.0.1:PORTA/uau_test e TEST_DB_USERNAME antes de `mvnw clean verify`. Cada execução cria schemas aleatórios, sem usar dados existentes; o usuário deve poder criar schemas. A senha deste ambiente isolado é vazia, usando PostgreSQL local com trust limitado a loopback. Sem TEST_DB_URL, integração é explicitamente ignorada; testes unitários continuam executando. Não interprete esse skip como aprovação da integração. Os schemas de teste são mantidos para inspeção.
 
 Veja [relatório de implementação](docs/IMPLEMENTACAO.md) para evidências, checklist C/I/M, limitações externas e resultados dos builds. [test.http](test.http) contém exemplos dos contratos; use variáveis locais e não salve tokens reais.

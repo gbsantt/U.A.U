@@ -1,13 +1,14 @@
+import { Text } from "../components/Typography";
 import { useTheme } from "../context/ThemeContext";
 import { useMemo as useThemeMemo } from "react";
 import { Palette } from "../theme/colors";
 import { useCallback, useState } from "react";
-import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View, ScrollView, useWindowDimensions } from "react-native";
+import { ActivityIndicator, Platform, Pressable, StyleSheet, View, ScrollView, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import DynamicIsland from "../components/DynamicIsland";
-import HospEasyMap from "../components/HospEasyMap";
+import UAUMap from "../components/UAUMap";
 import UnitMapCard from "../components/UnitMapCard";
 import MapBrand from "../components/MapBrand";
 import WebUnitsPanel from "../components/WebUnitsPanel";
@@ -94,7 +95,7 @@ export default function HomeScreen() {
                 <WebUnitsPanel unidades={unidades} localizacao={localizacao} erroLocalizacao={erroLocalizacao} onAbrirUnidade={abrirUnidade} />
             </View>}
             <View style={[styles.mapArea,web&&!desktop&&{minHeight:280}]}>
-                <HospEasyMap unidades={unidades} localizacaoUsuario={localizacao} onSelecionarUnidade={(u) => setSelecionadaId(u.unidadeId)} />
+                <UAUMap unidades={unidades} localizacaoUsuario={localizacao} onSelecionarUnidade={(u) => setSelecionadaId(u.unidadeId)} />
                 {selecionada && <UnitMapCard nome={selecionada.nome} percentual={selecionada.percentualOcupacao} tendencia={selecionada.tendencia}
                     nivelOcupacao={selecionada.nivelOcupacao} statusCamera={selecionada.statusCamera} statusMedicao={erro ? "DESATUALIZADA" : selecionada.statusMedicao}
                     onPress={() => abrirUnidade(selecionada)} onClose={() => setSelecionadaId(null)} />}
@@ -108,7 +109,7 @@ const createStyles = (colors: Palette) => StyleSheet.create({
     avatar: { width: 44, height: 44, borderRadius: 22, paddingHorizontal: 0, paddingVertical: 0, alignItems: "center", justifyContent: "center" },
     avatarText: { fontSize: 20, fontWeight: "800" },
     container: { flex: 1, backgroundColor: colors.background },
-    header: { paddingHorizontal: 20, paddingBottom: 12, backgroundColor: colors.surface, flexDirection: "row", alignItems: "center", gap: 16, borderBottomWidth: 1, borderBottomColor: colors.border },
+    header: { paddingHorizontal: 20, paddingBottom: 12, backgroundColor: colors.surface, flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 16, borderBottomWidth: 1, borderBottomColor: colors.border },
     headerLabel: { fontSize: 16, color: colors.textSecondary, marginLeft: 20 },
     account: { marginLeft: "auto", paddingHorizontal: 16, paddingVertical: 10, backgroundColor: colors.primaryLight, borderRadius: 12 },
     accountText: { color: colors.primaryDark, fontSize: 14, fontWeight: "700" },

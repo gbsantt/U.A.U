@@ -33,7 +33,7 @@ build/
 .vscode/
 
 # =========================
-# HospEasy - Segredos
+# UAU - Segredos
 # =========================
 .env
 **/.env

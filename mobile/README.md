@@ -1,4 +1,12 @@
-# HospEasy — aplicativo e web
+# UAU — aplicativo e web
+
+## Identidade visual
+
+O logo original do grupo está em `assets/uau-logo.jpg`, extraído sem alterações do documento de identidade visual. A abertura usa o logo completo e fundo bege; o cabeçalho apresenta o mascote original e a sigla UAU. O verde continua nas ações e na indicação de baixa ocupação, com branco, preto e cinza na interface.
+
+Roboto Regular, Medium, Bold e Black são empacotadas localmente e aplicadas a textos e campos em Android, iOS e web. Os detalhes da unidade usam cartões de ocupação, informações, fluxo e monitoramento; a avaliação usa estrelas e campo de comentário. A indicação de dados desatualizados permanece visível.
+
+Os recursos Android de abertura e ícone já estão sincronizados; gere um novo APK para distribuí-los. Ao regenerar o projeto nativo, preserve as personalizações de assinatura de release e de segurança de rede. A configuração Expo também prepara a abertura e o ícone para futuros builds iOS.
 
 O mesmo projeto Expo atende Android/iOS e navegador. O mapa web usa MapLibre GL JS
 com OpenFreeMap, coordenadas reais e os mesmos dados do backend do aplicativo.
@@ -44,7 +52,7 @@ e gerar novamente a versão web. Um site hospedado não consegue usar o localhos
 
 ## Comportamento do mapa
 
-- A marca HospEasy e a legenda ficam visíveis acima do mapa no app e no site.
+- A marca UAU e a legenda ficam visíveis acima do mapa no app e no site.
 - Os marcadores usam a letra H e indicam baixa ocupação (<50%), moderada (50–79%)
   ou alta (≥80%). Sem medição atual ou com câmera indisponível, ficam cinza.
 - Unidades sem coordenadas válidas aparecem na lista, mas não são posicionadas no mapa.

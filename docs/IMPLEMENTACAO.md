@@ -1,4 +1,4 @@
-# Implementação e validação do HospEasy
+# Implementação e validação do UAU
 
 ## Escopo e resultado
 
@@ -150,14 +150,14 @@ Foram preservados os ajustes locais do usuário em recuperação/baseline. Em pr
 
 ## Evidências da execução final
 
-- `mvn verify`, Java 21, PostgreSQL 18 em `127.0.0.1:55439/hospeasy_test`: **21 testes, zero falhas, zero erros, zero ignorados**, com empacotamento do JAR concluído. Log local: `D:/HospEasy/.test-runtime/maven-final.log`.
+- `mvn verify`, Java 21, PostgreSQL 18 em `127.0.0.1:55439/uau_test`: **21 testes, zero falhas, zero erros, zero ignorados**, com empacotamento do JAR concluído. Log local: `<workspace>/.test-runtime/maven-final.log`.
 - Python 3.14.5: `python -m unittest discover -s camera -p test_client.py -v`: **8 testes aprovados**. `python -m compileall -q camera` também concluído. Isso valida o cliente e seus contratos; não substitui a execução do modelo com webcam.
-- `npm run typecheck`: aprovado. `npm run build:web`: exportação raiz aprovada; exportação com `EXPO_PUBLIC_BASE_PATH=/hospeasy` também aprovada.
+- `npm run typecheck`: aprovado. `npm run build:web`: exportação raiz aprovada; exportação com `EXPO_PUBLIC_BASE_PATH=/uau` também aprovada.
 - `expo install --check`: dependências alinhadas ao SDK. O smoke test de geração de UUID pelo pacote xcode passou com o override instalado.
 - Revisão de segredos: nenhum valor secreto dos arquivos `.env` locais encontrado nos bundles textuais inspecionados. Nenhum `.env` real ou keystore privado está versionado; o único keystore versionado é o de debug.
 - `git diff --check`: aprovado após normalizar finais de arquivo.
 
-Os fluxos Web de suporte, avaliação, favorito, atualização de sessão e mapa foram exercitados anteriormente no schema isolado `qa_visual`. Nesta retomada, a navegação visual conservou `/hospeasy/acesso` e `/hospeasy/entrar`, e o erro de conexão apareceu de forma legível. A repetição dos fluxos autenticados pelo navegador integrado nas portas 18080/18081 ficou limitada por `ERR_BLOCKED_BY_CLIENT`; os testes HTTP do backend passaram. Não se apresenta essa repetição como homologação visual concluída.
+Os fluxos Web de suporte, avaliação, favorito, atualização de sessão e mapa foram exercitados anteriormente no schema isolado `qa_visual`. Nesta retomada, a navegação visual conservou `/uau/acesso` e `/uau/entrar`, e o erro de conexão apareceu de forma legível. A repetição dos fluxos autenticados pelo navegador integrado nas portas 18080/18081 ficou limitada por `ERR_BLOCKED_BY_CLIENT`; os testes HTTP do backend passaram. Não se apresenta essa repetição como homologação visual concluída.
 
 A prévia local foi corrigida para ler o arquivo antes de enviar headers. Uma exportação simultânea podia remover o arquivo durante a leitura e encerrar o servidor com `ERR_HTTP_HEADERS_SENT`. Requisições inválidas e arquivos ausentes agora retornam erro sem encerrar o processo.
 
@@ -165,15 +165,15 @@ Avisos adicionais de build: APIs nativas de dependências depreciadas, recursos 
 
 ### Android e artefatos finais
 
-`gradlew.bat :app:assembleDebug :app:assembleRelease -PreactNativeArchitectures=arm64-v8a --max-workers=2 --console=plain`: **BUILD SUCCESSFUL em 17m19s**, 825 tarefas (173 executadas, 652 atualizadas). A validação final foi ARM64; outras arquiteturas não foram recompiladas depois dos últimos ajustes. Log: `D:/HospEasy/.test-runtime/android-arm64-final.log`.
+`gradlew.bat :app:assembleDebug :app:assembleRelease -PreactNativeArchitectures=arm64-v8a --max-workers=2 --console=plain`: **BUILD SUCCESSFUL em 17m19s**, 825 tarefas (173 executadas, 652 atualizadas). A validação final foi ARM64; outras arquiteturas não foram recompiladas depois dos últimos ajustes. Log: `<workspace>/.test-runtime/android-arm64-final.log`.
 
 - Debug: `mobile/android/app/build/outputs/apk/debug/app-debug.apk` (82.977.061 bytes). Destina-se ao desenvolvimento com Metro.
 - Release: `mobile/android/app/build/outputs/apk/release/app-release-unsigned.apk` (45.935.282 bytes). Requer configuração de API HTTPS e keystore própria para distribuição; não é uma instalação de produção configurada.
 - JAR: `target/backend-0.0.1-SNAPSHOT.jar`.
-- Web: `mobile/dist`; exportação adicional de teste em `D:/HospEasy/.test-runtime/web-subpath`.
+- Web: `mobile/dist`; exportação adicional de teste em `<workspace>/.test-runtime/web-subpath`.
 
 O apksigner confirmou a ausência de assinatura no release (resultado esperado). O aapt confirmou `allowBackup=false`, `usesCleartextTraffic=false` e ABI `arm64-v8a`. Não há atributo debuggable habilitado no manifesto de release. Nenhum valor secreto dos `.env` locais foi encontrado no bundle extraído do APK. SHA-256 do APK unsigned: `77B9BBDCC598ABBDB95111E40442B4F00BD29C6B8AC37B8D71A885DAEB335550`.
 
-Após a correção da prévia, os caminhos `/hospeasy/entrar` e `/hospeasy/admin/suporte` responderam HTTP 200 com HTML; o worker `maplibre-gl-worker.mjs` e seu módulo `maplibre-gl-shared.mjs` responderam 200 com MIME JavaScript. Caminho malformado e asset inexistente retornaram 400/404 sem encerrar o servidor.
+Após a correção da prévia, os caminhos `/uau/entrar` e `/uau/admin/suporte` responderam HTTP 200 com HTML; o worker `maplibre-gl-worker.mjs` e seu módulo `maplibre-gl-shared.mjs` responderam 200 com MIME JavaScript. Caminho malformado e asset inexistente retornaram 400/404 sem encerrar o servidor.
 
 Resultado do checklist original: **40 itens resolvidos e 2 parcialmente resolvidos (I25 e M5)**, ambos com implementação disponível e homologação física Android pendente. Permanecem os 10 avisos npm descritos acima e as dependências externas explicitadas na matriz. Não houve publicação nem modificação de dados da instalação original.

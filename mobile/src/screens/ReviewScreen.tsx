@@ -1,5 +1,7 @@
+import { Text } from "../components/Typography";
 import { useEffect,useState } from "react";
-import { Text,View } from "react-native";
+import { Pressable, View } from "react-native";
+import { useTheme } from "../context/ThemeContext";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { ScreenLayout,Field,Button,ErrorNotice,useUI } from "../components/ScreenLayout";
@@ -8,6 +10,7 @@ import { buscarMinhasAvaliacoes,buscarSituacaoUnidade,atualizarAvaliacao,criarAv
 import { Alert } from "../utils/alert";
 export default function ReviewScreen({navigation,route}:NativeStackScreenProps<RootStackParamList,"Review">){
     const ui=useUI();
+    const {colors}=useTheme();
 
     const {usuario}=useAuth();const params=route.params??{};
     const avaliacaoId=params.avaliacaoId??params.avaliacao?.id;
@@ -27,12 +30,23 @@ export default function ReviewScreen({navigation,route}:NativeStackScreenProps<R
             else await criarAvaliacao(unidadeId,{nota,comentario:comentario.trim()},usuario.token);
             Alert.alert("Avaliação salva","Sua avaliação foi registrada.");navigation.goBack();}
         catch(e){setError(e instanceof Error?e.message:"Não foi possível salvar.");}finally{setBusy(false);}}
-    return <ScreenLayout title={avaliacaoId?"Editar avaliação":"Avaliar unidade"} onBack={()=>navigation.goBack()}>
-        <Text style={ui.label}>{nome}</Text><ErrorNotice message={error}/>
+    return <ScreenLayout title={avaliacaoId?"Editar avaliação":"Avaliar"} onBack={()=>navigation.goBack()}>
+        <Text style={ui.muted}>{nome}</Text><ErrorNotice message={error}/>
         {!usuario?<Button title="Entrar para avaliar" onPress={()=>navigation.navigate("Login")}/>:<>
-            <View style={ui.row}>{[1,2,3,4,5].map(n=><Button key={n} title={`${n} ★`} secondary={nota!==n} onPress={()=>setNota(n)}/>)}</View>
-            <Field label="Comentário (opcional)" value={comentario} onChangeText={setComentario} multiline maxLength={500}/>
-            <Button title="Salvar avaliação" busy={busy} disabled={loading||!unidadeId} onPress={()=>void save()}/>
+            <View style={ui.card}>
+                <Text style={ui.label}>Como foi sua experiência?</Text>
+                <Text style={ui.muted}>Toque nas estrelas para dar uma nota à unidade.</Text>
+                <View style={[ui.row,{justifyContent:"center",gap:4}]}>{[1,2,3,4,5].map(n=><Pressable key={n}
+                    accessibilityRole="radio" accessibilityLabel={`${n} ${n===1?"estrela":"estrelas"}`} accessibilityState={{checked:nota===n,disabled:busy||loading}}
+                    disabled={busy||loading} onPress={()=>setNota(n)} style={{minWidth:48,minHeight:56,alignItems:"center",justifyContent:"center"}}>
+                    <Text style={{fontSize:36,color:n<=nota?colors.primary:colors.disabled}}>★</Text>
+                </Pressable>)}</View>
+            </View>
+            <View style={ui.card}>
+                <Field label="Comentário (opcional)" placeholder="Escreva sua avaliação…" value={comentario} onChangeText={setComentario} multiline maxLength={500}/>
+                <Text style={[ui.muted,{alignSelf:"flex-end"}]}>{comentario.length}/500</Text>
+            </View>
+            <Button title={avaliacaoId?"Salvar alterações":"Enviar avaliação"} busy={busy} disabled={loading||!unidadeId||nota<1} onPress={()=>void save()}/>
         </>}
     </ScreenLayout>;
 }

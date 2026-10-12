@@ -38,7 +38,7 @@ Não é necessário instalar Torch, Ultralytics ou ONNX no Raspberry.
 ## Serviço
 
 Copie `.env.example` para `.env` e preencha a URL e chave do dispositivo.
-Se seu `.env` antigo definir `HOSPEASY_MODEL_PATH` com `.pt`, remova essa linha
+Se seu `.env` antigo definir `UAU_MODEL_PATH` com `.pt`, remova essa linha
 ou altere para `yolov8n.onnx`.
 
 ```sh

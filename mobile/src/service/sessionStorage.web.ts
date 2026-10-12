@@ -1,5 +1,5 @@
 // Keep only the existing bearer token. Identity and permissions are always validated by the API.
-const KEY="hospeasy.session.v2";
+const KEY="uau.session.v2";
 export async function readToken() {
     const token=window.localStorage.getItem(KEY) ?? window.sessionStorage.getItem(KEY);
     if(token) {

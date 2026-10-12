@@ -1,5 +1,6 @@
+import { Text } from "./Typography";
 import { useEffect, useRef, useMemo as useThemeMemo } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 import { Map, Marker, NavigationControl, setWorkerUrl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./map.web.css";

@@ -14,6 +14,6 @@ O servidor público Photon permite uso moderado sem cadastro, mas não garante d
 
 ## Verificação
 
-`GeocodificacaoTest` cobre a seleção, divergências, coordenadas inválidas e preservação da busca estrita. `GeocodificacaoLiveTest` faz consultas reais somente quando `HOSPEASY_GEOCODE_LIVE=true`; não depende de banco e fica desabilitado nas execuções normais.
+`GeocodificacaoTest` cobre a seleção, divergências, coordenadas inválidas e preservação da busca estrita. `GeocodificacaoLiveTest` faz consultas reais somente quando `UAU_GEOCODE_LIVE=true`; não depende de banco e fica desabilitado nas execuções normais.
 
-Exemplo PowerShell: defina `$env:HOSPEASY_GEOCODE_LIVE='true'` e execute `./mvnw.cmd '-Dtest=GeocodificacaoTest,GeocodificacaoLiveTest' test`.
+Exemplo PowerShell: defina `$env:UAU_GEOCODE_LIVE='true'` e execute `./mvnw.cmd '-Dtest=GeocodificacaoTest,GeocodificacaoLiveTest' test`.

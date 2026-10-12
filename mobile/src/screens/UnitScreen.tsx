@@ -1,5 +1,6 @@
+import { Text } from "../components/Typography";
 import { useCallback,useState } from "react";
-import { Text,View } from "react-native";
+import { View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
@@ -7,7 +8,7 @@ import { ScreenLayout,Button,ErrorNotice,useUI } from "../components/ScreenLayou
 import { ApiError,Avaliacao,buscarAvaliacoes,buscarSituacaoUnidade } from "../service/api";
 import { Unidade } from "../types/Unidade";
 import { useFavorites } from "../context/FavoritesContext";
-import { statusNoMapa } from "../utils/mapStatus";
+import { dadosAtuais, statusNoMapa } from "../utils/mapStatus";
 import { useAuth } from "../context/AuthContext";
 import { downloadReport } from "../service/downloadReport";
 import { appIsActive } from "../utils/activity";
@@ -50,16 +51,35 @@ export default function UnitScreen({navigation,route}:NativeStackScreenProps<Roo
         <ErrorNotice message={error}/>{error&&<Button title="Tentar novamente" onPress={()=>setRetry(n=>n+1)}/>}
         {!unidade&&!error&&<Text style={ui.text}>Carregando unidade…</Text>}
         {unidade&&<>
-            <View style={ui.card}><Text style={ui.text}>{unidade.tipo.replaceAll("_"," ")}</Text><Text style={ui.text}>{unidade.endereco}</Text>
-                <Text style={ui.text}>Telefone: {unidade.telefone||"Não informado"}</Text>
-                <Text style={[ui.title,{color:status!.color}]}>{status!.text}</Text>
-                <Text style={ui.text}>Última contagem: {unidade.ocupacaoAtual} pessoas · capacidade: {unidade.capacidadeAreaMonitorada}</Text>
-                <Text style={ui.text}>Câmera: {unidade.statusCamera.replaceAll("_"," ")} · medição: {unidade.statusMedicao.replaceAll("_"," ")}</Text>
-                <Text style={ui.text}>Última atualização: {unidade.ultimaAtualizacao?new Date(unidade.ultimaAtualizacao).toLocaleString("pt-BR"):"Sem atualização"}</Text>
+            <Text style={ui.muted}>Situação atual da unidade</Text>
+            <View style={ui.card}>
+                <Text style={[ui.sectionTitle,{fontSize:12,letterSpacing:1}]}>OCUPAÇÃO ATUAL</Text>
+                <Text style={[ui.title,{fontSize:dadosAtuais(unidade)?40:24}]}>{dadosAtuais(unidade)?`${unidade.percentualOcupacao.toFixed(0)}%`:status!.text}</Text>
+                <Text style={ui.muted}>Última contagem: {unidade.ocupacaoAtual} de {unidade.capacidadeAreaMonitorada} pessoas</Text>
+            </View>
+            <View style={{height:6,borderRadius:3,backgroundColor:colors.border,overflow:"hidden"}} accessible accessibilityLabel={status!.text}>
+                <View style={{height:6,backgroundColor:status!.color,width:dadosAtuais(unidade)?`${Math.min(100,Math.max(0,unidade.percentualOcupacao))}%`:"0%"}} />
+            </View>
+            <Text style={ui.muted}>{dadosAtuais(unidade)?`● ${unidade.nivelOcupacao.replaceAll("_"," ")}`:"Sem dados atuais"}</Text>
+            <View style={ui.card}>
+                <Text style={ui.sectionTitle}>Informações</Text>
+                <Text style={ui.muted}>Endereço</Text><Text style={ui.text}>{unidade.endereco}</Text>
+                <View style={{height:1,backgroundColor:colors.border}} />
+                <Text style={ui.muted}>Telefone</Text><Text style={ui.text}>{unidade.telefone||"Não informado"}</Text>
+                <Text style={ui.muted}>{unidade.tipo.replaceAll("_"," ")}</Text>
+            </View>
+            <View style={ui.card}>
+                <Text style={ui.sectionTitle}>Fluxo da unidade</Text>
                 {unidade.statusMedicao==="ATUALIZADA" && unidade.ritmoOcupacao!=="DADOS_INSUFICIENTES" ? <><Text style={ui.text}>Média (30 min): {unidade.mediaUltimos30Minutos.toFixed(1)} pessoas</Text>
                 <Text style={ui.text}>Tendência: {unidade.tendencia} · ritmo: {unidade.ritmoOcupacao.replaceAll("_"," ")}</Text></> : <Text style={ui.text}>Sem dados suficientes e atuais para estimar tendência.</Text>}
-                <Button secondary title={estaFavoritado(id)?"Remover dos favoritos":"Adicionar aos favoritos"} onPress={()=>void alternarFavorito(unidade)}/>
             </View>
+            <View style={ui.card}>
+                <Text style={ui.sectionTitle}>Monitoramento</Text>
+                <Text style={ui.text}>Câmera: {unidade.statusCamera.replaceAll("_"," ")}</Text>
+                <Text style={ui.text}>Medição: {unidade.statusMedicao.replaceAll("_"," ")}</Text>
+                <Text style={ui.muted}>Última atualização: {unidade.ultimaAtualizacao?new Date(unidade.ultimaAtualizacao).toLocaleString("pt-BR"):"Sem atualização"}</Text>
+            </View>
+            <Button secondary title={estaFavoritado(id)?"Remover dos favoritos":"Adicionar aos favoritos"} onPress={()=>void alternarFavorito(unidade)}/>
             <Button title="Avaliar unidade" onPress={()=>navigation.navigate("Review",{unidadeId:id})}/>
             <Text style={ui.title}>Avaliações {avaliacoes.length? `· ${media.toFixed(1)} / 5`:""}</Text>
             <ErrorNotice message={reviewError}/>{reviewError&&<Button title="Recarregar avaliações" secondary onPress={()=>setRetry(n=>n+1)}/>}

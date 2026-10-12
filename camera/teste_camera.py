@@ -23,7 +23,7 @@ def main():
         if args.salvar and not cv2.imwrite(args.salvar, imagem):
             raise RuntimeError('Não foi possível salvar a imagem de teste.')
         if args.mostrar:
-            cv2.imshow('HospEasy - teste local', imagem)
+            cv2.imshow('UAU - teste local', imagem)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 raise KeyboardInterrupt
 

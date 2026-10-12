@@ -8,13 +8,13 @@ import detector
 
 class CameraClientTests(unittest.TestCase):
     def setUp(self):
-        self.environment=patch.dict(os.environ, {"HOSPEASY_API_URL":"http://localhost:8080","HOSPEASY_CAMERA_KEY":"only-test-key"},clear=True)
+        self.environment=patch.dict(os.environ, {"UAU_API_URL":"http://localhost:8080","UAU_CAMERA_KEY":"only-test-key"},clear=True)
         self.environment.start()
         self.addCleanup(self.environment.stop)
     def response(self, status, **headers):
         return Mock(status_code=status,headers=headers)
     def test_missing_configuration(self):
-        for key in ("HOSPEASY_API_URL","HOSPEASY_CAMERA_KEY"):
+        for key in ("UAU_API_URL","UAU_CAMERA_KEY"):
             with patch.dict(os.environ,{key:""}):
                 self.assertRaises(ValueError,config.configuracao_api)
     def test_no_unit_id_and_payload(self):
@@ -48,7 +48,7 @@ class CameraClientTests(unittest.TestCase):
         for qty in (-1,True,1.5):
             self.assertRaises(ValueError,api.enviar_medicao,qty,session=Mock())
         for url in ("ftp://localhost","https://user:pass@localhost","https://localhost?secret=x"):
-            with patch.dict(os.environ,{"HOSPEASY_API_URL":url}):
+            with patch.dict(os.environ,{"UAU_API_URL":url}):
                 self.assertRaises(ValueError,config.configuracao_api)
     def test_model_path_and_missing_model(self):
         self.assertTrue(config.MODELO_PATH.is_absolute())

@@ -1,5 +1,6 @@
+import { Text } from "../components/Typography";
 import { useCallback,useState } from "react";
-import { Text,View } from "react-native";
+import { View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";

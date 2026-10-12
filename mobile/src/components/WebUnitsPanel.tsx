@@ -1,8 +1,9 @@
+import { Text, TextInput } from "./Typography";
 import { useTheme } from "../context/ThemeContext";
 import { useMemo as useThemeMemo } from "react";
 import { Palette } from "../theme/colors";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { Unidade } from "../types/Unidade";
 import { statusNoMapa, temCoordenadas } from "../utils/mapStatus";

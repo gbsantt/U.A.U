@@ -10,7 +10,7 @@ export default function LoginScreen({navigation}:NativeStackScreenProps<RootStac
         try{await login(email,senha);navigation.reset({index:0,routes:[{name:"Home"}]});}
         catch(e){setError(e instanceof Error?e.message:"Não foi possível entrar.");}finally{setBusy(false);}}
     const support=process.env.EXPO_PUBLIC_SUPPORT_URL;
-    return <ScreenLayout title="Entrar no HospEasy" onBack={()=>navigation.goBack()}>
+    return <ScreenLayout title="Entrar no UAU" onBack={()=>navigation.goBack()}>
         <Field label="E-mail" value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" autoComplete="email" maxLength={180}/>
         <Field label="Senha" value={senha} onChangeText={setSenha} secureTextEntry autoComplete="current-password" maxLength={72}/>
         <ErrorNotice message={error}/><Button title="Entrar" busy={busy} onPress={()=>void entrar()}/>

@@ -1,16 +1,11 @@
+import { Text } from "./Typography";
 import { useRef } from "react";
 import { CameraRef } from "@maplibre/maplibre-react-native";
 import AddressSearch from "./AddressSearch";
 import { useTheme } from "../context/ThemeContext";
 import { useMemo as useThemeMemo } from "react";
 import { Palette } from "../theme/colors";
-import {
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 
 import {
     Camera,
