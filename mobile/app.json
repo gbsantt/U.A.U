@@ -5,15 +5,15 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#438F0B",
-    "icon": "./assets/uau-logo.jpg",
+    "icon": "./assets/uau-icon.png",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#F2E3C4",
-        "foregroundImage": "./assets/uau-logo.jpg"
+        "backgroundColor": "#003C2F",
+        "foregroundImage": "./assets/uau-icon.png"
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.anonymous.mobile",
@@ -23,13 +23,13 @@
       "name": "UAU",
       "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/uau-logo.jpg"
+      "favicon": "./assets/uau-icon.png"
     },
     "plugins": [
       "@maplibre/maplibre-react-native",
       "expo-secure-store",
       ["expo-splash-screen", {
-        "backgroundColor": "#F2E3C4",
+        "backgroundColor": "#003C2F",
         "image": "./assets/uau-logo.jpg",
         "imageWidth": 320,
         "resizeMode": "contain"

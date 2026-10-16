@@ -2,7 +2,9 @@
 
 ## Identidade visual
 
-O logo original do grupo está em `assets/uau-logo.jpg`, extraído sem alterações do documento de identidade visual. A abertura usa o logo completo e fundo bege; o cabeçalho apresenta o mascote original e a sigla UAU. O verde continua nas ações e na indicação de baixa ocupação, com branco, preto e cinza na interface.
+O logo atual está em `assets/uau-logo.jpg`, copiado da imagem `uau.jpeg` fornecida pelo grupo. A abertura e o cabeçalho exibem a imagem completa em sua proporção horizontal, com fundo verde escuro e a marca U.A.U. O verde continua nas ações e na indicação de baixa ocupação, com branco, preto e cinza na interface.
+
+`node scripts/prepare-brand-assets.mjs` prepara o ícone quadrado `assets/uau-icon.png`, mantendo o logo inteiro com margens para os recortes do sistema operacional. Execute após substituir a imagem original.
 
 Roboto Regular, Medium, Bold e Black são empacotadas localmente e aplicadas a textos e campos em Android, iOS e web. Os detalhes da unidade usam cartões de ocupação, informações, fluxo e monitoramento; a avaliação usa estrelas e campo de comentário. A indicação de dados desatualizados permanece visível.
 
