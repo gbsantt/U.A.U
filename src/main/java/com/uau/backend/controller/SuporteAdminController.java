@@ -14,5 +14,8 @@ public class SuporteAdminController {
         return service.listar(null,status,categoria,page,size);
     }
     @GetMapping("/{id}") public SolicitacaoSuporteAdminResponseDTO buscar(@PathVariable Long id) { return service.buscarAdmin(id); }
+    @GetMapping("/{id}/mensagens") public java.util.List<MensagemSuporteResponseDTO> mensagens(@PathVariable Long id,@RequestParam(defaultValue="0") Long after) { return service.mensagens(id,null,after); }
+    @PostMapping("/{id}/mensagens") @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
+    public MensagemSuporteResponseDTO enviar(@PathVariable Long id,@Valid @RequestBody MensagemSuporteRequestDTO dto) { return service.enviar(id,null,dto); }
     @PatchMapping("/{id}/status") public SolicitacaoSuporteAdminResponseDTO atualizar(@PathVariable Long id,@Valid @RequestBody AtualizarStatusSuporteRequestDTO dto) { return service.atualizar(id,dto); }
 }

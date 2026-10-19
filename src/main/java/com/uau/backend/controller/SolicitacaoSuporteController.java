@@ -18,4 +18,7 @@ public class SolicitacaoSuporteController {
         return service.listar(u.getId(),status,categoria,page,size);
     }
     @GetMapping("/{id}") public SolicitacaoSuporteResponseDTO buscar(@AuthenticationPrincipal Usuario u,@PathVariable Long id) { return service.buscarPropria(id,u.getId()); }
+    @GetMapping("/{id}/mensagens") public java.util.List<MensagemSuporteResponseDTO> mensagens(@AuthenticationPrincipal Usuario u,@PathVariable Long id,@RequestParam(defaultValue="0") Long after) { return service.mensagens(id,u.getId(),after); }
+    @PostMapping("/{id}/mensagens") @ResponseStatus(HttpStatus.CREATED)
+    public MensagemSuporteResponseDTO enviar(@AuthenticationPrincipal Usuario u,@PathVariable Long id,@Valid @RequestBody MensagemSuporteRequestDTO dto) { return service.enviar(id,u.getId(),dto); }
 }

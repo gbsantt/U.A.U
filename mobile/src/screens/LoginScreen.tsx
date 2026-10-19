@@ -4,10 +4,10 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { ScreenLayout,Field,Button,ErrorNotice } from "../components/ScreenLayout";
 import { useAuth } from "../context/AuthContext";
-export default function LoginScreen({navigation}:NativeStackScreenProps<RootStackParamList,"Login">){
+export default function LoginScreen({navigation,route}:NativeStackScreenProps<RootStackParamList,"Login">){
     const {login}=useAuth();const [email,setEmail]=useState(""),[senha,setSenha]=useState(""),[error,setError]=useState(""),[busy,setBusy]=useState(false);
     async function entrar(){if(!email.trim()||!senha){setError("Preencha e-mail e senha.");return;}setBusy(true);setError("");
-        try{await login(email,senha);navigation.reset({index:0,routes:[{name:"Home"}]});}
+        try{await login(email,senha);const id=route.params?.unidadeId;navigation.reset({index:id?1:0,routes:[{name:"Home"},...(id?[{name:"Unit" as const,params:{unidadeId:id}}]:[])]});}
         catch(e){setError(e instanceof Error?e.message:"Não foi possível entrar.");}finally{setBusy(false);}}
     const support=process.env.EXPO_PUBLIC_SUPPORT_URL;
     return <ScreenLayout title="Entrar no UAU" onBack={()=>navigation.goBack()}>
@@ -15,7 +15,7 @@ export default function LoginScreen({navigation}:NativeStackScreenProps<RootStac
         <Field label="Senha" value={senha} onChangeText={setSenha} secureTextEntry autoComplete="current-password" maxLength={72}/>
         <ErrorNotice message={error}/><Button title="Entrar" busy={busy} onPress={()=>void entrar()}/>
         <Button title="Esqueci minha senha" secondary onPress={()=>navigation.navigate("ForgotPassword")}/>
-        <Button title="Criar conta" secondary onPress={()=>navigation.navigate("Register")}/>
+        <Button title="Criar conta" secondary onPress={()=>navigation.navigate("Register",route.params)}/>
         {support&&/^(https:\/\/|mailto:)/.test(support)&&<Button title="Contato de suporte" secondary onPress={()=>{void Linking.openURL(support).catch(()=>setError("Não foi possível abrir o canal de suporte."));}}/>}
     </ScreenLayout>;
 }

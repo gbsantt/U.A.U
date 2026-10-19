@@ -34,7 +34,7 @@ import DispositivosAdminScreen from "../screens/DispositivosAdminScreen";
 export type RootStackParamList = {
     Home: undefined; Unit: { unidadeId: number };
     Review: { unidadeId?: number; avaliacaoId?: number; unidade?: Unidade; avaliacao?: Avaliacao };
-    Access: undefined; Login: undefined; Register: undefined; Profile: undefined; ForgotPassword: undefined;
+    Access: undefined; Login: {unidadeId?:number} | undefined; Register: {unidadeId?:number} | undefined; Profile: undefined; ForgotPassword: undefined;
     VerifyCode: { email?: string }; ResetPassword: { email?: string; codigo?: string };
     UsuariosAdmin: undefined; CriarUsuarioAdmin: undefined; EditarUsuarioAdmin: { usuarioId: number };
     UnidadesAdmin: undefined; CriarUnidadeAdmin: undefined; EditarUnidadeAdmin: { unidadeId: number };

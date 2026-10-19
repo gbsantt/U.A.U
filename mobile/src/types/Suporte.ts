@@ -9,3 +9,4 @@ export type Dispositivo = { id:number; nome:string; unidadeId:number; ativo:bool
 export type CredencialCamera = { dispositivo:Dispositivo; cameraKey:string };
 
 export type ResumoSuporte = Omit<SolicitacaoSuporte,"descricao"|"version">;
+export type MensagemSuporte = {id:number;equipe:boolean;texto:string;createdAt:string};

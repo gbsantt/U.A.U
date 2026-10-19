@@ -2,6 +2,8 @@ package com.uau.backend.service;
 import com.uau.backend.dto.*;
 import com.uau.backend.entity.*;
 import com.uau.backend.repository.SolicitacaoSuporteRepository;
+import com.uau.backend.repository.MensagemSuporteRepository;
+import java.util.List;
 import com.uau.backend.exception.ApiException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,7 +11,25 @@ import org.springframework.data.domain.*;
 @Service @Transactional(readOnly=true)
 public class SolicitacaoSuporteService {
     private final SolicitacaoSuporteRepository repository;
-    public SolicitacaoSuporteService(SolicitacaoSuporteRepository repository) { this.repository=repository; }
+    private final MensagemSuporteRepository mensagens;
+    public SolicitacaoSuporteService(SolicitacaoSuporteRepository repository,MensagemSuporteRepository mensagens) { this.repository=repository; this.mensagens=mensagens; }
+    private SolicitacaoSuporte conversa(Long id,Long usuarioId) {
+        return (usuarioId==null?repository.findById(id):repository.findByIdAndUsuarioId(id,usuarioId)).orElseThrow(this::missing);
+    }
+    public List<MensagemSuporteResponseDTO> mensagens(Long id,Long usuarioId,Long after) {
+        conversa(id,usuarioId);
+        return mensagens.findBySolicitacaoIdAndIdGreaterThanOrderByIdAsc(id,after).stream().map(this::mensagem).toList();
+    }
+    @Transactional public MensagemSuporteResponseDTO enviar(Long id,Long usuarioId,MensagemSuporteRequestDTO dto) {
+        var s=conversa(id,usuarioId);
+        var m=new MensagemSuporte();m.setSolicitacao(s);m.setEquipe(usuarioId==null);m.setTexto(dto.texto().trim());
+        s.setUpdatedAt(java.time.Instant.now());
+        s.setStatus(usuarioId==null?StatusSuporte.EM_ANALISE:StatusSuporte.ABERTO);
+        return mensagem(mensagens.saveAndFlush(m));
+    }
+    private MensagemSuporteResponseDTO mensagem(MensagemSuporte m) {
+        return new MensagemSuporteResponseDTO(m.getId(),m.isEquipe(),m.getTexto(),m.getCreatedAt());
+    }
     @Transactional public SolicitacaoSuporteResponseDTO criar(Usuario usuario,CriarSolicitacaoSuporteRequestDTO dto) {
         var s=new SolicitacaoSuporte(); s.setUsuario(usuario); s.setAssunto(dto.assunto().trim());
         s.setCategoria(dto.categoria()); s.setDescricao(dto.descricao().trim()); s.setStatus(StatusSuporte.ABERTO);

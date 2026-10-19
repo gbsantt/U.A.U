@@ -135,6 +135,25 @@ class UAUIntegrationTest {
   assertEquals(0,sql.queryForObject("SELECT count(*) FROM favorito",Integer.class));
   assertEquals(0,sql.queryForObject("SELECT count(*) FROM avaliacao",Integer.class));
  }
+ @Test void supportChatKeepsHistoryAndChecksOwnership()throws Exception{
+  long id=ok("POST","/usuarios/me/suporte",common,Map.of("assunto","Chat","categoria","OUTRO","descricao","Preciso de ajuda"),201).path("id").asLong();
+  String path="/usuarios/me/suporte/"+id+"/mensagens",staff="/admin/suporte/"+id+"/mensagens";
+  ok("GET",path,null,null,401);ok("GET",path,other,null,404);
+  ok("POST",path,other,Map.of("texto","Invadir conversa"),404);
+  ok("POST",staff,common,Map.of("texto","Falsa equipe"),403);
+  ok("POST",path,common,Map.of("texto","   "),400);
+  ok("POST",path,common,Map.of("texto","x".repeat(5001)),400);
+  var sent=ok("POST",path,common,Map.of("texto"," Mais detalhes ","equipe",true),201);
+  assertFalse(sent.path("equipe").asBoolean());assertEquals("Mais detalhes",sent.path("texto").asText());
+  var reply=ok("POST",staff,admin,Map.of("texto","Vamos ajudar"),201);assertTrue(reply.path("equipe").asBoolean());
+  var history=ok("GET",path,common,null,200);assertEquals(2,history.size());assertEquals(sent.path("id"),history.get(0).path("id"));
+  assertEquals(1,ok("GET",path+"?after="+sent.path("id").asLong(),common,null,200).size());
+  assertEquals("EM_ANALISE",ok("GET","/usuarios/me/suporte/"+id,common,null,200).path("status").asText());
+  var current=ok("GET","/admin/suporte/"+id,admin,null,200).path("solicitacao");
+  ok("PATCH","/admin/suporte/"+id+"/status",admin,Map.of("status","RESOLVIDO","version",current.path("version").asLong()),200);
+  ok("POST",path,common,Map.of("texto","Ainda preciso de ajuda"),201);
+  assertEquals("ABERTO",ok("GET","/usuarios/me/suporte/"+id,common,null,200).path("status").asText());
+ }
  @Test void supportOwnershipPaginationAndVersion()throws Exception{
   var s=ok("POST","/usuarios/me/suporte",common,Map.of("assunto","Ajuda","categoria","APLICATIVO","descricao","Descrição do problema","usuarioId",v.getId()),201);
   long id=s.path("id").asLong();

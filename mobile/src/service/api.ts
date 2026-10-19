@@ -103,6 +103,8 @@ export function listarSuporte(token:string,admin:boolean,page=0,status?:StatusSu
 }
 export const criarSuporte = (data:{assunto:string;categoria:CategoriaSuporte;descricao:string},token:string) => request<SolicitacaoSuporte>("/usuarios/me/suporte",{method:"POST",data,token});
 export const buscarSuporte = (id:number,token:string,signal?:AbortSignal) => request<SolicitacaoSuporte>(`/usuarios/me/suporte/${id}`,{token,signal});
+export const listarMensagensSuporte = (id:number,token:string,admin=false,after=0,signal?:AbortSignal) => request<import("../types/Suporte").MensagemSuporte[]>(`${admin?"/admin/suporte":"/usuarios/me/suporte"}/${id}/mensagens?after=${after}`,{token,signal});
+export const enviarMensagemSuporte = (id:number,texto:string,token:string,admin=false) => request<import("../types/Suporte").MensagemSuporte>(`${admin?"/admin/suporte":"/usuarios/me/suporte"}/${id}/mensagens`,{method:"POST",data:{texto},token});
 export const buscarSuporteAdmin = (id:number,token:string,signal?:AbortSignal) => request<SuporteAdmin>(`/admin/suporte/${id}`,{token,signal});
 export const atualizarStatusSuporte = (id:number,status:StatusSuporte,version:number,token:string) => request<SuporteAdmin>(`/admin/suporte/${id}/status`,{method:"PATCH",data:{status,version},token});
 export const listarDispositivos = (id:number,token:string,signal?:AbortSignal) => request<Dispositivo[]>(`/admin/unidades/${id}/dispositivos`,{token,signal});

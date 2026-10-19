@@ -75,7 +75,7 @@ export default function HomeScreen() {
         <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) }]}>
             <MapBrand />
             {desktop && <Text style={styles.headerLabel}>Mapa de unidades de saúde</Text>}
-            {web && <Pressable accessibilityRole="button" onPress={()=>navigation.navigate(autenticado?"Suporte":"Login")}><Text style={styles.accountText}>Suporte</Text></Pressable>}
+            {web && <Pressable accessibilityRole="button" onPress={()=>navigation.navigate("Suporte")}><Text style={styles.accountText}>Suporte</Text></Pressable>}
             <Pressable accessibilityRole="button" accessibilityLabel={autenticado ? "Abrir meu perfil" : "Entrar"} onPress={() => navigation.navigate(autenticado ? "Profile" : "Access")} style={[styles.account, autenticado && styles.avatar]}>
                 <Text style={[styles.accountText, autenticado && styles.avatarText]}>{autenticado ? usuario?.nome.trim().charAt(0).toUpperCase() : "Entrar"}</Text>
             </Pressable>
@@ -86,7 +86,7 @@ export default function HomeScreen() {
                 <View key={label} style={styles.legendItem}><View style={[styles.dot, { backgroundColor: color }]} /><Text style={styles.legendText}>{label}</Text></View>)}
         </View>
         {(carregando || erro) && <View accessibilityRole="alert" style={styles.notice}>
-            {carregando && <ActivityIndicator color={colors.primary} />}
+            {carregando && <ActivityIndicator color={colors.primary} />}gitgit
             <Text style={styles.noticeText}>{carregando ? "Buscando unidades…" : erro}</Text>
             {erro && <Pressable accessibilityRole="button" onPress={() => setTentativa((value) => value + 1)}><Text style={styles.retry}>Tentar novamente</Text></Pressable>}
         </View>}

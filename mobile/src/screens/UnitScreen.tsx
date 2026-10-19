@@ -1,6 +1,6 @@
 import { Text } from "../components/Typography";
 import { useCallback,useState } from "react";
-import { View } from "react-native";
+import { Modal, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
@@ -20,8 +20,10 @@ export default function UnitScreen({navigation,route}:NativeStackScreenProps<Roo
     const id=route.params.unidadeId;
     const {usuario}=useAuth();
     const [reportBusy,setReportBusy]=useState(false),[reportError,setReportError]=useState("");
+    const [loginVisible,setLoginVisible]=useState(false);
     async function baixarRelatorio(){
-        if(!usuario || reportBusy)return;
+        if(!usuario){setLoginVisible(true);return;}
+        if(reportBusy)return;
         setReportBusy(true);setReportError("");
         try{await downloadReport(id,usuario.token);}catch(e){setReportError(e instanceof Error?e.message:"Não foi possível baixar o relatório.");}
         finally{setReportBusy(false);}
@@ -87,12 +89,23 @@ export default function UnitScreen({navigation,route}:NativeStackScreenProps<Roo
                 <Text style={ui.text}>{a.usuarioNome||"Usuário"} · {new Date(a.criadoEm).toLocaleDateString("pt-BR")}</Text>
                 <Text style={ui.text}>{a.comentario||"Sem comentário"}</Text></View>)}
             {!avaliacoes.length&&!reviewError&&<Text style={ui.text}>Esta unidade ainda não possui avaliações.</Text>}
-            {usuario&&<View style={ui.card}>
+            <View style={ui.card}>
                 <Text style={ui.title}>Relatório de ocupação</Text>
                 <Text style={ui.text}>Baixe os últimos 100 registros disponíveis, com datas, contagens, percentuais e origem das medições, para estudos e análises.</Text>
                 <ErrorNotice message={reportError}/>
                 <Button title="Baixar relatório em PDF" busy={reportBusy} onPress={()=>void baixarRelatorio()}/>
-            </View>}
+            </View>
         </>}</>}
+        <Modal visible={loginVisible} transparent animationType="fade" onRequestClose={()=>setLoginVisible(false)}>
+            <View style={{flex:1,backgroundColor:"rgba(0,0,0,0.55)",justifyContent:"center",alignItems:"center",padding:24}}>
+                <View accessibilityViewIsModal style={[ui.card,{width:"100%",maxWidth:420}]}>
+                    <Text accessibilityRole="header" style={ui.title}>Baixe o relatório da unidade</Text>
+                    <Text style={ui.text}>Entre na sua conta ou crie uma conta para baixar o PDF.</Text>
+                    <Button title="Entrar" onPress={()=>{setLoginVisible(false);navigation.navigate("Login",{unidadeId:id});}}/>
+                    <Button title="Criar conta" secondary onPress={()=>{setLoginVisible(false);navigation.navigate("Register",{unidadeId:id});}}/>
+                    <Button title="Agora não" secondary onPress={()=>setLoginVisible(false)}/>
+                </View>
+            </View>
+        </Modal>
     </ScreenLayout>;
 }

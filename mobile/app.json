@@ -23,7 +23,7 @@
       "name": "UAU",
       "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/uau-icon.png"
+      "favicon": "./assets/uau-logo.jpg"
     },
     "plugins": [
       "@maplibre/maplibre-react-native",
