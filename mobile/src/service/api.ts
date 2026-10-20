@@ -82,6 +82,7 @@ export const criarAvaliacao = (id:number,data:CriarAvaliacaoPayload,token:string
 export const buscarMinhasAvaliacoes = (token:string,signal?:AbortSignal) => request<Avaliacao[]>("/usuarios/me/avaliacoes",{token,signal});
 export const atualizarAvaliacao = (id:number,data:AtualizarAvaliacaoPayload,token:string) => request<Avaliacao>(`/usuarios/me/avaliacoes/${id}`,{method:"PUT",data,token});
 export const excluirAvaliacao = (id:number,token:string) => request<void>(`/usuarios/me/avaliacoes/${id}`,{method:"DELETE",token});
+export const excluirAvaliacaoAdmin = (id:number,token:string) => request<void>(`/admin/avaliacoes/${id}`,{method:"DELETE",token});
 export const listarUsuariosAdmin = (token:string) => request<UsuarioAdmin[]>("/usuarios",{token});
 export const buscarUsuarioAdmin = (id:number,token:string,signal?:AbortSignal) => request<UsuarioAdmin>(`/usuarios/${id}`,{token,signal});
 export const criarUsuarioAdmin = (data:CadastroUsuarioPayload & {tipo:TipoUsuario},token:string) => request<UsuarioAdmin>("/usuarios",{method:"POST",data,token});

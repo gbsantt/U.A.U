@@ -10,5 +10,7 @@ public interface HistoricoOcupacaoRepository extends JpaRepository<HistoricoOcup
     interface Amostra { Long getUnidadeId(); Integer getQuantidadePessoas(); }
     @Query("select h.unidadeAtendimento.id as unidadeId, h.quantidadePessoas as quantidadePessoas from HistoricoOcupacao h where h.unidadeAtendimento.id in :ids and h.origem=com.uau.backend.entity.OrigemMedicao.CAMERA and h.registradoEm>=:inicio order by h.registradoEm desc, h.id desc")
     List<Amostra> janela(Collection<Long> ids,LocalDateTime inicio);
+    @Modifying(flushAutomatically=true)
+    @Query("delete from HistoricoOcupacao h where h.unidadeAtendimento.id=:id")
     void deleteByUnidadeAtendimentoId(Long id);
 }

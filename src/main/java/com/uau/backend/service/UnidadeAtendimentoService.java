@@ -66,7 +66,7 @@ public class UnidadeAtendimentoService {
         var u=unidades.bloquear(id).orElseThrow(UnidadeNaoEncontradaException::new);
         historico.deleteByUnidadeAtendimentoId(id); avaliacoes.deleteByUnidadeAtendimentoId(id);
         favoritos.deleteByUnidadeId(id); dispositivos.deleteByUnidadeAtendimentoId(id);
-        // Preserve the existing explicit flush before deleting the parent.
+        // Bulk deletes execute in dependency order, without loading stale child entities.
         unidades.flush(); unidades.delete(u);
     }
     @Transactional public UnidadeAtendimentoResponseDTO atualizarOcupacao(Long id,AtualizarOcupacaoDTO d,Usuario usuario) {

@@ -40,6 +40,8 @@ public interface FavoritoRepository
     );
 
 
+    @org.springframework.data.jpa.repository.Modifying(flushAutomatically=true)
+    @org.springframework.data.jpa.repository.Query("delete from Favorito f where f.unidade.id=:unidadeId")
     void
     deleteByUnidadeId(
             Long unidadeId

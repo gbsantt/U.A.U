@@ -33,6 +33,8 @@ public interface AvaliacaoRepository
     );
 
 
+    @org.springframework.data.jpa.repository.Modifying(flushAutomatically=true)
+    @org.springframework.data.jpa.repository.Query("delete from Avaliacao a where a.unidadeAtendimento.id=:unidadeAtendimentoId")
     void
     deleteByUnidadeAtendimentoId(
             Long unidadeAtendimentoId

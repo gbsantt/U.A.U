@@ -135,6 +135,40 @@ class UAUIntegrationTest {
   assertEquals(0,sql.queryForObject("SELECT count(*) FROM favorito",Integer.class));
   assertEquals(0,sql.queryForObject("SELECT count(*) FROM avaliacao",Integer.class));
  }
+ @Test void adminCanModerateReviewsAndOtherUsersCannot()throws Exception{
+  long id=unit();
+  long review=ok("POST","/unidades/"+id+"/avaliacoes",common,Map.of("nota",1,"comentario","Remover"),201).path("id").asLong();
+  ok("POST","/unidades/"+id+"/avaliacoes",other,Map.of("nota",5,"comentario","Manter"),201);
+  String path="/admin/avaliacoes/"+review;
+  ok("DELETE",path,null,null,401);
+  ok("DELETE",path,common,null,403);
+  ok("DELETE",path,other,null,403);
+  ok("DELETE","/usuarios/me/avaliacoes/"+review,other,null,404);
+  assertEquals(2,ok("GET","/unidades/"+id+"/avaliacoes",null,null,200).size());
+  ok("DELETE",path,admin,null,204);
+  assertEquals(0,ok("GET","/usuarios/me/avaliacoes",common,null,200).size());
+  var remaining=ok("GET","/unidades/"+id+"/avaliacoes",null,null,200);
+  assertEquals(1,remaining.size());assertEquals("Manter",remaining.get(0).path("comentario").asText());
+  ok("DELETE",path,admin,null,404);
+ }
+ @Test void deleteUnitWithAllDependenciesKeepsOtherUnits()throws Exception{
+  long id=unit(),kept=unit();
+  var c=camera(id,true);
+  assertEquals(204,measurement(c.path("cameraKey").asText(),Map.of("quantidadePessoas",12)).status());
+  ok("PATCH","/unidades/"+id+"/ocupacao",admin,Map.of("quantidadePessoas",10),200);
+  for(String token:List.of(common,other)){
+   ok("POST","/unidades/"+id+"/avaliacoes",token,Map.of("nota",3,"comentario","Teste"),201);
+   ok("POST","/usuarios/me/favoritos/"+id,token,null,200);
+  }
+  ok("POST","/unidades/"+kept+"/avaliacoes",common,Map.of("nota",5),201);
+  ok("DELETE","/unidades/"+id,admin,null,204);
+  ok("GET","/unidades/"+id,null,null,404);
+  ok("GET","/unidades/"+kept,null,null,200);
+  for(String table:List.of("historico_ocupacao","dispositivo_camera","avaliacao"))
+   assertEquals(0,sql.queryForObject("SELECT count(*) FROM "+table+" WHERE unidade_atendimento_id=?",Integer.class,id));
+  assertEquals(0,sql.queryForObject("SELECT count(*) FROM favorito WHERE unidade_id=?",Integer.class,id));
+  assertEquals(1,ok("GET","/unidades/"+kept+"/avaliacoes",null,null,200).size());
+ }
  @Test void supportChatKeepsHistoryAndChecksOwnership()throws Exception{
   long id=ok("POST","/usuarios/me/suporte",common,Map.of("assunto","Chat","categoria","OUTRO","descricao","Preciso de ajuda"),201).path("id").asLong();
   String path="/usuarios/me/suporte/"+id+"/mensagens",staff="/admin/suporte/"+id+"/mensagens";

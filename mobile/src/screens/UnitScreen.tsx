@@ -1,11 +1,12 @@
 import { Text } from "../components/Typography";
-import { useCallback,useState } from "react";
+import { useCallback,useRef,useState } from "react";
 import { Modal, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { ScreenLayout,Button,ErrorNotice,useUI } from "../components/ScreenLayout";
-import { ApiError,Avaliacao,buscarAvaliacoes,buscarSituacaoUnidade } from "../service/api";
+import { ApiError,Avaliacao,buscarAvaliacoes,buscarSituacaoUnidade,excluirAvaliacaoAdmin } from "../service/api";
+import { Alert } from "../utils/alert";
 import { Unidade } from "../types/Unidade";
 import { useFavorites } from "../context/FavoritesContext";
 import { dadosAtuais, statusNoMapa } from "../utils/mapStatus";
@@ -21,6 +22,17 @@ export default function UnitScreen({navigation,route}:NativeStackScreenProps<Roo
     const {usuario}=useAuth();
     const [reportBusy,setReportBusy]=useState(false),[reportError,setReportError]=useState("");
     const [loginVisible,setLoginVisible]=useState(false);
+    const [deletingReview,setDeletingReview]=useState<number>();
+    const deletingReviewRef=useRef(false);
+    async function excluirReview(avaliacaoId:number){
+        if(usuario?.tipo!=="ADMIN"||deletingReviewRef.current)return;
+        deletingReviewRef.current=true;setDeletingReview(avaliacaoId);setReviewError("");
+        try{
+            await excluirAvaliacaoAdmin(avaliacaoId,usuario.token);
+            setAvaliacoes(items=>items.filter(a=>a.id!==avaliacaoId));
+        }catch(e){setReviewError(e instanceof Error?e.message:"Não foi possível excluir a avaliação.");}
+        finally{deletingReviewRef.current=false;setDeletingReview(undefined);}
+    }
     async function baixarRelatorio(){
         if(!usuario){setLoginVisible(true);return;}
         if(reportBusy)return;
@@ -87,7 +99,11 @@ export default function UnitScreen({navigation,route}:NativeStackScreenProps<Roo
             <ErrorNotice message={reviewError}/>{reviewError&&<Button title="Recarregar avaliações" secondary onPress={()=>setRetry(n=>n+1)}/>}
             {avaliacoes.map(a=><View key={a.id} style={ui.card}><Text style={ui.label}>{"★".repeat(a.nota)}{"☆".repeat(5-a.nota)}</Text>
                 <Text style={ui.text}>{a.usuarioNome||"Usuário"} · {new Date(a.criadoEm).toLocaleDateString("pt-BR")}</Text>
-                <Text style={ui.text}>{a.comentario||"Sem comentário"}</Text></View>)}
+                <Text style={ui.text}>{a.comentario||"Sem comentário"}</Text>
+                {usuario?.tipo==="ADMIN"&&<Button title="Excluir avaliação" secondary busy={deletingReview===a.id} disabled={deletingReview!==undefined}
+                    onPress={()=>Alert.alert("Excluir avaliação",`Excluir a avaliação de ${a.usuarioNome||"Usuário"}? Esta ação não pode ser desfeita.`,[
+                        {text:"Cancelar",style:"cancel"},{text:"Excluir",style:"destructive",onPress:()=>void excluirReview(a.id)}])}/>}
+                </View>)}
             {!avaliacoes.length&&!reviewError&&<Text style={ui.text}>Esta unidade ainda não possui avaliações.</Text>}
             <View style={ui.card}>
                 <Text style={ui.title}>Relatório de ocupação</Text>

@@ -30,6 +30,7 @@ export default function UnidadesAdminScreen({navigation}:NativeStackScreenProps<
             <Text style={ui.text}>Câmera: {u.statusCamera.replaceAll("_"," ")} · Medição: {u.statusMedicao.replaceAll("_"," ")}</Text>
             <View style={ui.row}><Button title="Editar" onPress={()=>navigation.navigate("EditarUnidadeAdmin",{unidadeId:u.unidadeId})}/>
                 <Button title="Dispositivos" secondary onPress={()=>navigation.navigate("DispositivosAdmin",{unidadeId:u.unidadeId})}/>
+                <Button title="Avaliações" secondary onPress={()=>navigation.navigate("Unit",{unidadeId:u.unidadeId})}/>
                 <Button title="Excluir" secondary disabled={busy} onPress={()=>Alert.alert("Excluir unidade",`Excluir "${u.nome}" e seus históricos, avaliações e favoritos? Esta ação não pode ser desfeita.`,[{text:"Cancelar",style:"cancel"},{text:"Excluir",style:"destructive",onPress:()=>void excluir(u.unidadeId)}])}/></View>
         </View>)}</>}
     </ScreenLayout>;

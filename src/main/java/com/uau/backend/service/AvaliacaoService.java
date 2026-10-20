@@ -52,7 +52,7 @@ public class AvaliacaoService {
 
         UnidadeAtendimento unidade =
                 unidadeAtendimentoRepository
-                        .findById(unidadeId)
+                        .bloquear(unidadeId)
                         .orElseThrow(
                                 UnidadeNaoEncontradaException::new
                         );
@@ -203,6 +203,14 @@ public class AvaliacaoService {
         );
     }
 
+
+    @Transactional
+    public void excluirAvaliacaoAdmin(Long avaliacaoId) {
+        var avaliacao = avaliacaoRepository.findById(avaliacaoId)
+                .orElseThrow(() -> new com.uau.backend.exception.ApiException(404,
+                        "AVALIACAO_NAO_ENCONTRADA", "Avaliação não encontrada."));
+        avaliacaoRepository.delete(avaliacao);
+    }
 
     private AvaliacaoResponseDTO
     converterParaDTO(

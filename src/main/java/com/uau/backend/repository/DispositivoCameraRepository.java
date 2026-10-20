@@ -10,5 +10,7 @@ public interface DispositivoCameraRepository extends JpaRepository<DispositivoCa
     List<DispositivoCamera> findByUnidadeAtendimentoIdOrderById(Long id);
     List<DispositivoCamera> findByUnidadeAtendimentoIdIn(Collection<Long> ids);
     boolean existsByUnidadeAtendimentoIdAndAtivoTrueAndIdNot(Long unidadeId,Long id);
+    @Modifying(flushAutomatically=true)
+    @Query("delete from DispositivoCamera d where d.unidadeAtendimento.id=:id")
     void deleteByUnidadeAtendimentoId(Long id);
 }
