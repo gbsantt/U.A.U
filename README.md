@@ -8,9 +8,9 @@ O UAU é um sistema web e Android que facilita a consulta de unidades de saúde 
 
 ## Equipe
 
-- Gabriel Becca dos Santos — Participação em todas as etapas do projeto.
-- Matheus de Souza Andreato — Participação em todas as etapas do projeto.
-- Kevyn Fernandes Freitas — Participação em todas as etapas do projeto.
+- Gabriel Becca dos Santos — Desenvolvedor do site e auxílio na parte escrita
+- Matheus de Souza Andreato — Parte Escrita e Organização
+- Kevyn Fernandes Freitas — Parte Escrita
 
 As responsabilidades de planejamento, desenvolvimento, testes e documentação foram divididas igualmente entre os três integrantes.
 
