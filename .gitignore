@@ -68,3 +68,6 @@ logs/
 .DS_Store
 Thumbs.db
 *.crdownload
+
+# Documentação e relatórios mantidos apenas no computador
+/docs/
