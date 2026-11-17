@@ -1,11 +1,12 @@
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, useWindowDimensions } from "react-native";
 import { brand } from "../theme/brand";
 
 
 export default function MapBrand() {
+    const {width}=useWindowDimensions();
     return (
-        <View style={styles.brand} accessible accessibilityLabel="U.A.U — Unidades de Atendimento de Urgência">
-            <Image source={brand.logo} resizeMode="contain" style={styles.logo} accessible={false} />
+        <View style={[styles.brand,width<400&&{width:128}]}>
+            <Image source={brand.logo} resizeMode="contain" style={styles.logo} accessibilityRole="image" accessibilityLabel="U.A.U — Unidades de Atendimento de Urgência" />
         </View>
     );
 }

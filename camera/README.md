@@ -45,8 +45,8 @@ ou altere para `yolov8n.onnx`.
 python main.py
 ```
 
-Mantidos: confiança 0.5, classe pessoa, NMS IoU 0.7, mediana de cinco amostras,
-captura 1280x720, intervalo de 180 segundos após cada ciclo, autenticação,
+Padrões atuais: confiança 0.3, classe pessoa, NMS IoU 0.7, mediana de cinco amostras,
+captura 1280x720, pausa de 10 segundos após cada ciclo, autenticação,
 timeout, tentativas com UUID idempotente e logs rotativos. Falhas de captura
 ou inferência não são enviadas como zero pessoas. A câmera é liberada entre ciclos.
 O teste e o serviço compartilham a coleta e o detector. São descartados frames

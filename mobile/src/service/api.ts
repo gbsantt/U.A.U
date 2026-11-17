@@ -75,6 +75,8 @@ export const verificarCodigoRecuperacao = (email:string,codigo:string) => reques
 export const redefinirSenha = (email:string,codigo:string,novaSenha:string) => request<void>("/usuarios/redefinir-senha",{method:"POST",data:{email,codigo,novaSenha}});
 export const buscarSituacoesUnidades = (signal?:AbortSignal) => request<Unidade[]>("/unidades/situacoes/ordenadas",{signal});
 export const buscarSituacaoUnidade = (id:number,signal?:AbortSignal) => request<Unidade>(`/unidades/${id}/situacao`,{signal});
+export const registrarConferenciaManual = (id:number,quantidadePessoas:number,token:string) =>
+    request<UnidadeCadastro>(`/unidades/${id}/ocupacao`,{method:"PATCH",data:{quantidadePessoas},token});
 export const buscarUnidadePorId = (id:number,signal?:AbortSignal) => request<UnidadeCadastro>(`/unidades/${id}`,{signal});
 export const listarUnidadesAdmin = (token:string,signal?:AbortSignal) => request<Unidade[]>("/admin/unidades",{token,signal});
 export const buscarAvaliacoes = (id:number,signal?:AbortSignal) => request<Avaliacao[]>(`/unidades/${id}/avaliacoes`,{signal});

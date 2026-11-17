@@ -14,6 +14,7 @@ import { useAuth } from "../context/AuthContext";
 import { downloadReport } from "../service/downloadReport";
 import { appIsActive } from "../utils/activity";
 import { useTheme } from "../context/ThemeContext";
+import ManualCount from "../components/ManualCount";
 export default function UnitScreen({navigation,route}:NativeStackScreenProps<RootStackParamList,"Unit">){
     const ui=useUI();
     const {colors}=useTheme();
@@ -71,7 +72,8 @@ export default function UnitScreen({navigation,route}:NativeStackScreenProps<Roo
                 <Text style={[ui.title,{fontSize:dadosAtuais(unidade)?40:24}]}>{dadosAtuais(unidade)?`${unidade.percentualOcupacao.toFixed(0)}%`:status!.text}</Text>
                 <Text style={ui.muted}>Última contagem: {unidade.ocupacaoAtual} de {unidade.capacidadeAreaMonitorada} pessoas</Text>
             </View>
-            <View style={{height:6,borderRadius:3,backgroundColor:colors.border,overflow:"hidden"}} accessible accessibilityLabel={status!.text}>
+            <View style={{height:6,borderRadius:3,backgroundColor:colors.border,overflow:"hidden"}} accessible accessibilityRole="progressbar"
+                accessibilityLabel={`Ocupação: ${status!.text}`} accessibilityValue={dadosAtuais(unidade)?{min:0,max:100,now:Math.min(100,Math.max(0,unidade.percentualOcupacao)),text:`${unidade.percentualOcupacao.toFixed(0)}%`}:{text:"Sem dados atuais"}}>
                 <View style={{height:6,backgroundColor:status!.color,width:dadosAtuais(unidade)?`${Math.min(100,Math.max(0,unidade.percentualOcupacao))}%`:"0%"}} />
             </View>
             <Text style={ui.muted}>{dadosAtuais(unidade)?`● ${unidade.nivelOcupacao.replaceAll("_"," ")}`:"Sem dados atuais"}</Text>
@@ -92,8 +94,12 @@ export default function UnitScreen({navigation,route}:NativeStackScreenProps<Roo
                 <Text style={ui.text}>Câmera: {unidade.statusCamera.replaceAll("_"," ")}</Text>
                 <Text style={ui.text}>Medição: {unidade.statusMedicao.replaceAll("_"," ")}</Text>
                 <Text style={ui.muted}>Última atualização: {unidade.ultimaAtualizacao?new Date(unidade.ultimaAtualizacao).toLocaleString("pt-BR"):"Sem atualização"}</Text>
+                <Text style={ui.text}>Esta tela consulta o servidor a cada 15 segundos enquanto estiver ativa. As medições da câmera são periódicas, conforme a configuração do dispositivo; a data acima indica a última medição recebida.</Text>
+                <Text style={ui.muted}>Padrão do cliente da câmera: mediana de 5 amostras e pausa de 10 segundos após cada ciclo, além do tempo de captura, processamento e envio. A configuração pode ser alterada na instalação.</Text>
+                <Text style={ui.muted}>A contagem estima pessoas presentes na área enquadrada. Entradas e saídas aparecem na próxima amostra; não representa pessoas únicas atendidas nem tempo de espera.</Text>
             </View>
             <Button secondary title={estaFavoritado(id)?"Remover dos favoritos":"Adicionar aos favoritos"} onPress={()=>void alternarFavorito(unidade)}/>
+            <ManualCount id={id} capacidade={unidade.capacidadeAreaMonitorada} onSaved={()=>void buscarSituacaoUnidade(id).then(setUnidade).catch(()=>setError("Conferência salva. Não foi possível atualizar a tela; tente novamente."))}/>
             <Button title="Avaliar unidade" onPress={()=>navigation.navigate("Review",{unidadeId:id})}/>
             <Text style={ui.title}>Avaliações {avaliacoes.length? `· ${media.toFixed(1)} / 5`:""}</Text>
             <ErrorNotice message={reviewError}/>{reviewError&&<Button title="Recarregar avaliações" secondary onPress={()=>setRetry(n=>n+1)}/>}
@@ -107,7 +113,7 @@ export default function UnitScreen({navigation,route}:NativeStackScreenProps<Roo
             {!avaliacoes.length&&!reviewError&&<Text style={ui.text}>Esta unidade ainda não possui avaliações.</Text>}
             <View style={ui.card}>
                 <Text style={ui.title}>Relatório de ocupação</Text>
-                <Text style={ui.text}>Baixe os últimos 100 registros disponíveis, com datas, contagens, percentuais e origem das medições, para estudos e análises.</Text>
+                <Text style={ui.text}>Baixe os últimos 100 registros disponíveis, com datas, turnos de referência, contagens, percentuais e origem das medições, para estudos e análises.</Text>
                 <ErrorNotice message={reportError}/>
                 <Button title="Baixar relatório em PDF" busy={reportBusy} onPress={()=>void baixarRelatorio()}/>
             </View>

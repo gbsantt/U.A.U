@@ -21,6 +21,7 @@
     },
     "web": {
       "name": "UAU",
+      "lang": "pt-BR",
       "bundler": "metro",
       "output": "single",
       "favicon": "./assets/uau-logo.jpg"

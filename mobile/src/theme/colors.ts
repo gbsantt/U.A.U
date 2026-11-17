@@ -1,6 +1,6 @@
 export const colors = {
     // Identidade UAU
-    primary: "#438F0B",
+    primary: "#347008",
     primaryDark: "#2F6807",
     primaryLight: "#E6F1DE",
 
@@ -14,14 +14,14 @@ export const colors = {
     surface: "#FFFFFF",
 
     text: "#171717",
-    textSecondary: "#727272",
+    textSecondary: "#596353",
 
     border: "#E4E7E2",
 
     // Status
     success: "#438F0B",
     warning: "#F2BE4B",
-    danger: "#E74C5B",
+    danger: "#B42335",
 
     offline: "#7A7A7A",
 
@@ -31,7 +31,7 @@ export const colors = {
 export type Palette = typeof colors;
 export const darkColors: Palette = {
     ...colors,
-    primary: "#438F0B",
+    primary: "#347008",
     primaryDark: "#A0DC77",
     primaryLight: "#263E20",
     glassLight: "rgba(25, 34, 26, 0.94)",

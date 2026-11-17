@@ -24,6 +24,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }), [mode]);
     useEffect(() => {
         if(Platform.OS === "web") {
+            document.documentElement.lang="pt-BR";
             document.documentElement.dataset.theme=mode;
             document.documentElement.style.colorScheme=mode;
             document.body.style.backgroundColor=value.colors.background;

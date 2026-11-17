@@ -1,5 +1,77 @@
 # UAU
 
+![Logo UAU](mobile/assets/uau-logo.jpg)
+
+## Descrição
+
+O **UAU — Unidades de Atendimento de Urgência** é um sistema web e Android que permite consultar unidades de saúde no mapa e acompanhar a ocupação estimada das áreas monitoradas. Reúne busca por nome, endereço ou CEP, favoritos, avaliações, relatórios em PDF e chat de suporte. O objetivo é facilitar o acesso às informações das unidades. A ocupação observada não equivale ao tempo de espera e não substitui orientação clínica.
+
+## Equipe
+
+Projeto de TCC do grupo 10, desenvolvido por:
+
+| Integrante | Função |
+| --- | --- |
+| Gabriel Becca dos Santos | Integrante do grupo; função específica a confirmar |
+| Matheus de Souza Andreato | Integrante do grupo; função específica a confirmar |
+| Kevyn Fernandes Freitas | Integrante do grupo; função específica a confirmar |
+
+## Tecnologias utilizadas
+
+| Camada | Tecnologias e versões declaradas |
+| --- | --- |
+| Interface web e Android | TypeScript ~6.0.3, React 19.2.3, React Native 0.86.3, React Native Web ^0.21.2, Expo ~57.0.18 |
+| Navegação e mapas | React Navigation ^7.3.16, MapLibre GL ^6.9.0, MapLibre React Native ^11.3.8 |
+| Servidor | Java 21, Spring Boot 4.1.0, Maven Wrapper |
+| Banco de dados | PostgreSQL 15+ (ambiente de validação: 18), migrações Flyway e JPA |
+| Relatórios | Apache PDFBox 3.0.8 |
+| Visão computacional | Python, OpenCV DNN e YOLOv8n ONNX; versões em [requirements.txt](camera/requirements.txt) |
+
+O HTML e o CSS web são produzidos pelo Expo/React Native Web. Para instalar as versões exatas do frontend, utilize `npm ci`, que respeita o arquivo de lock.
+
+## Organização do repositório
+
+```text
+docs/       Documentação técnica, correções e material do TCC
+src/        Código Java do backend e recursos do servidor
+mobile/     Código compartilhado das interfaces web e Android
+camera/     Captura e contagem local de pessoas
+design/     Índice dos recursos visuais e capturas da interface
+database/   Guia do banco e localização das migrações SQL
+README.md   Apresentação e instruções de execução
+```
+
+Os SQLs executáveis permanecem em `src/main/resources/db/migration`, onde o Flyway os encontra. Os recursos gráficos usados pelo aplicativo ficam em `mobile/assets`. [Design](design/README.md) e [banco de dados](database/README.md) organizam os links, sem duplicar os arquivos utilizados pelo sistema.
+
+## Imagens do sistema
+
+As capturas abaixo demonstram a página inicial e a consulta de uma unidade, com dados de teste. Não representam medições reais.
+
+![Página inicial com mapa e lista de unidades](design/screenshots/home-desktop.jpg)
+
+![Detalhes de uma unidade e informações de monitoramento](design/screenshots/unidade-desktop.jpg)
+
+## Como executar o projeto
+
+1. Instale os [requisitos](#requisitos) e crie o banco PostgreSQL.
+2. Configure as variáveis do servidor conforme [Backend](#backend), incluindo os secrets e as credenciais do banco.
+3. Na raiz do repositório, execute `.\mvnw.cmd spring-boot:run` no Windows ou `./mvnw spring-boot:run` no Linux/macOS. A API utiliza a porta 8080 por padrão.
+4. Em outro terminal, entre em `mobile`, execute `npm ci` e configure `EXPO_PUBLIC_API_URL` conforme [Android e Web](#android-e-web).
+5. Execute `npm run web` e abra o endereço informado pelo Expo. Para Android, siga os requisitos de development build da seção abaixo.
+6. Para ativar medições reais, configure o dispositivo seguindo o [guia da câmera](camera/README.md). Sem câmera ativa e medições recentes, a interface mostra “Sem dados atuais”.
+
+## Como citar o projeto
+
+Citação do software, usando o nome atual do sistema:
+
+> SANTOS, Gabriel Becca dos; ANDREATO, Matheus de Souza; FREITAS, Kevyn Fernandes. **UAU — Unidades de Atendimento de Urgência**. Software desenvolvido no projeto de TCC do grupo 10, 2026.
+
+Para citar o trabalho escrito, substitua pelo título oficial, instituição e demais dados bibliográficos da versão entregue à escola. Esses dados e as funções individuais da equipe ainda precisam ser confirmados pelo grupo.
+
+## Correções de acessibilidade e solicitações da banca
+
+Consulte o [registro das correções](docs/CORRECOES_ACESSIBILIDADE_BANCA_2026_11.md), com problema, página, alteração, validação e limitações. A nova avaliação nas extensões WAVE e axe DevTools deve ser registrada separadamente dos testes de código.
+
 ## Atualização do nome
 
 O projeto usa **UAU** nas telas, e-mails, relatórios e configurações; identificadores técnicos usam `uau` e variáveis específicas usam `UAU_*`.
@@ -55,7 +127,7 @@ A gestão de usuários permite criar, consultar, editar papel/dados e **desativa
 
 ### Migrações e atualização de instalação existente
 
-Flyway executa V1–V4; Hibernate apenas valida (`ddl-auto=validate`).
+Flyway executa as migrações versionadas disponíveis em `src/main/resources/db/migration` e a migração Java V3; Hibernate apenas valida (`ddl-auto=validate`).
 
 1. Pare escritores (backend/câmeras) e faça backup completo com `pg_dump`; valide sua restauração em outro banco.
 2. Atualize primeiro uma **cópia** do banco e confirme esquema, contagens e dispositivos.
@@ -67,6 +139,8 @@ Flyway executa V1–V4; Hibernate apenas valida (`ddl-auto=validate`).
 8. Valide login, unidade, favoritos, câmera e suporte. Para reverter a migração de hashes, restaure o backup; não há como recuperar a chave original pelo hash.
 
 Nunca execute testes contra o banco original. As migrações não removem registros de usuários/unidades/histórico. Exclusão de unidade pela administração é uma ação explícita e remove suas avaliações, favoritos, dispositivos e histórico em uma única transação.
+
+A migração V7 corrige instalações antigas que ainda possuem `usuario.unidade_atendimento_id`: ao excluir a unidade, apenas esse vínculo é removido, preservando a conta do usuário. O vínculo permanece intacto enquanto a unidade existir. Instalações novas, sem essa coluna, não precisam dela e a migração não adiciona a coluna.
 
 ## Android e Web
 
@@ -93,6 +167,18 @@ node scripts/serve-web.mjs
 ```
 
 O preview escuta somente 127.0.0.1:8081. O diretório `dist` contém a SPA e o worker MapLibre. A hospedagem real precisa servir arquivos existentes e direcionar as demais rotas ao index.html, preservando a URL. Não redirecione arquivos JS inexistentes para HTML.
+
+### Acesso com ngrok
+
+O `Caddyfile` da raiz recebe a porta 8090 e encaminha `/api/*` para o backend na 8080, removendo o prefixo `/api`. As demais rotas vão para o frontend na 8081. Use `EXPO_PUBLIC_API_URL=/api` antes de gerar o build web e inclua a origem HTTPS exata do seu domínio ngrok em `CORS_ORIGINS` no processo do backend (ou nas variáveis da configuração de execução da IDE). Reinicie o backend após atualizar o JAR ou essas variáveis.
+
+Com backend e frontend ativos, execute na raiz do projeto:
+
+```powershell
+caddy run --config Caddyfile --adapter caddyfile
+```
+
+Em outro terminal, execute `ngrok http 8090`. Antes de testar pelo domínio público, confirme que `http://localhost:8090/` abre o site e `http://localhost:8090/api/unidades/situacoes/ordenadas` retorna JSON. O ngrok deve apontar para a porta do Caddy, compartilhando o mesmo endereço para site e API. `ERR_NGROK_3200` significa que o endpoint está offline; uma resposta JSON `409 CONFLITO` da aplicação exige investigar o backend/banco.
 
 Para subdiretório, defina EXPO_PUBLIC_BASE_PATH com o prefixo, por exemplo `/uau`, **antes de exportar** e use o mesmo prefixo no servidor. A configuração Expo e o worker compartilham esse valor. Exemplo PowerShell:
 
@@ -145,13 +231,19 @@ Use o modelo `yolov8n.onnx` incluído na pasta camera ou configure UAU_MODEL_PAT
 5. Execute `python teste_camera.py` (teste local pelo terminal), `python teste_camera.py --salvar deteccao.jpg` (imagem marcada) ou `python main.py` (serviço de medição). `--mostrar` requer OpenCV com interface gráfica.
 6. Confirme última comunicação no painel. Chave revogada/inativa é recusada; regenerar invalida imediatamente a anterior. Após regenerar, atualize .env e reinicie o cliente; um dispositivo revogado continua inativo até ser ativado.
 
-Configuração padrão: classe pessoa, confiança 0.5, 1280×720, mediana de 5 amostras a cada 180 s. Ajustes opcionais estão em camera/.env.example. Produção e teste usam o mesmo detector e a mesma coleta de amostras. O cliente envia apenas quantidade + UUID aleatório por medição; retries reutilizam esse UUID. Timeout de conexão/leitura: 5/10 s; até 3 tentativas para rede, 429 e 5xx, com espera. 401/403 encerram o serviço para correção administrativa. Redirecionamentos HTTP não encaminham a chave.
+Configuração padrão atual: classe pessoa, confiança 0.3, 1280×720, mediana de 5 amostras com pausa de 0,5 s entre elas e pausa de 10 s após cada ciclo. O intervalo efetivo inclui captura, inferência, envio e eventuais tentativas; não é uma transmissão contínua em tempo real. Ajustes opcionais estão em camera/.env.example. Produção e teste usam o mesmo detector e a mesma coleta de amostras. O cliente envia apenas quantidade + UUID aleatório por medição; retries reutilizam esse UUID. Timeout de conexão/leitura: 5/10 s; até 3 tentativas para rede, 429 e 5xx, com espera. 401/403 encerram o serviço para correção administrativa. Redirecionamentos HTTP não encaminham a chave.
 
 Nenhuma imagem é enviada ao backend. Logs rotativos registram eventos sem chave/senha/resposta bruta. Valide o enquadramento e a contagem no ambiente físico antes de apresentar resultados reais.
 
 ## Suporte e ocupação
 
-Usuários criam e consultam suas próprias solicitações, com categorias e estados ABERTO, EM_ANALISE e RESOLVIDO. ADMIN lista, filtra, pagina e altera status com controle de versão. Não há chat/anexos.
+Usuários criam e consultam suas próprias conversas de suporte, com mensagens persistidas, categorias e estados ABERTO, EM_ANALISE e RESOLVIDO. ADMIN lista, filtra, pagina, responde e altera status com controle de versão. A conversa aberta consulta mensagens a cada 5 segundos. O registro pode ser feito a qualquer horário enquanto o servidor estiver disponível; não existe garantia de plantão humano nem de disponibilidade ininterrupta. Não há anexos.
+
+A Home e os detalhes consultam o servidor a cada 15 segundos enquanto a tela está ativa. A última atualização informa a idade do registro recebido, independentemente da frequência de consulta da tela.
+
+O PDF inclui turno por registro, agrupamento por data de início do turno, mínimo, máximo e média por amostra, além das mudanças de período no histórico. Padrão: manhã 06:00–12:00, tarde 12:00–18:00 e noite 18:00–06:00. Configure `TURNO_MANHA`, `TURNO_TARDE` e `TURNO_NOITE` no backend (formato `HH:mm`, nessa ordem). A madrugada pertence à data de início do turno noturno. A classificação usa o horário local já armazenado, sem converter o histórico legado nem comprovar troca de equipe. Alterar esses limites reclassifica os períodos na próxima exportação.
+
+Nos detalhes da unidade, ADMIN pode registrar uma conferência manual para comparação no PDF (origem MANUAL). A próxima medição da câmera substitui a ocupação atual; a conferência não altera a conexão da câmera. Contagens de amostras não são somadas como pessoas únicas. Mantém-se uma câmera ativa por unidade; ampliar para câmeras simultâneas exige definir áreas e validar a deduplicação.
 
 Câmera: ONLINE até 6 min sem comunicação; ATRASADA entre 6 e 15 min; OFFLINE depois disso ou sem comunicação; DESATIVADA e SEM_CAMERA são explícitos. Favoritos, Home e detalhes compartilham o cálculo. Somente dados atuais participam das sugestões. Baixa ocupação <50%, moderada 50–79,99%, alta >=80%. A API pública de histórico não expõe o operador.
 

@@ -49,7 +49,7 @@ export default function WebUnitsPanel({ unidades, localizacao, erroLocalizacao, 
             {filtradas.map((unidade) => {
                 const status = statusNoMapa(unidade);
                 const distancia = localizacao && temCoordenadas(unidade) ? calcularDistanciaKm(localizacao, unidade) : null;
-                return <Pressable key={unidade.unidadeId} accessibilityRole="button" accessibilityLabel={`Ver detalhes de ${unidade.nome}, ${status.text}`}
+                return <Pressable key={unidade.unidadeId} accessibilityRole="button"
                     style={styles.unit} onPress={() => onAbrirUnidade(unidade)}>
                     <Text style={styles.name}>{unidade.nome}</Text>
                     <Text style={styles.address}>{unidade.endereco}</Text>

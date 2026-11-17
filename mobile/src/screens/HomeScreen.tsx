@@ -71,7 +71,7 @@ export default function HomeScreen() {
     }
 
     const Content=web&&!desktop?ScrollView:View;
-    return <View style={styles.container}>
+    return <View role="main" style={styles.container}>
         <View style={[styles.header, { paddingTop: Math.max(insets.top, 12) }]}>
             <MapBrand />
             {desktop && <Text style={styles.headerLabel}>Mapa de unidades de saúde</Text>}
@@ -86,7 +86,7 @@ export default function HomeScreen() {
                 <View key={label} style={styles.legendItem}><View style={[styles.dot, { backgroundColor: color }]} /><Text style={styles.legendText}>{label}</Text></View>)}
         </View>
         {(carregando || erro) && <View accessibilityRole="alert" style={styles.notice}>
-            {carregando && <ActivityIndicator color={colors.primary} />}gitgit
+            {carregando && <ActivityIndicator color={colors.primary} />}
             <Text style={styles.noticeText}>{carregando ? "Buscando unidades…" : erro}</Text>
             {erro && <Pressable accessibilityRole="button" onPress={() => setTentativa((value) => value + 1)}><Text style={styles.retry}>Tentar novamente</Text></Pressable>}
         </View>}

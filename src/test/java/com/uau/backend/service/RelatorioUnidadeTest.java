@@ -18,11 +18,13 @@ class RelatorioUnidadeTest {
         var rows=new ArrayList<HistoricoOcupacao>();
         for(int i=0;i<100;i++) {var row=new HistoricoOcupacao();row.setQuantidadePessoas(12);row.setPercentualOcupacao(75.0);row.setOrigem(OrigemMedicao.CAMERA);row.setRegistradoEm(LocalDateTime.of(2026,9,25,12,0).minusMinutes(i));rows.add(row);}
         when(history.findTop100ByUnidadeAtendimentoIdOrderByRegistradoEmDescIdDesc(7L)).thenReturn(rows);
-        var bytes=new RelatorioUnidadeService(units,history).gerar(7L);
+        var bytes=new RelatorioUnidadeService(units,history,new TurnoReferenciaService("06:00","12:00","18:00")).gerar(7L);
         try(var pdf=Loader.loadPDF(bytes)) {
             assertEquals(3,pdf.getNumberOfPages());
             String text=new PDFTextStripper().getText(pdf);
             assertTrue(text.contains("75,0%"));assertTrue(text.contains("São José"));assertTrue(text.contains("100"));
+            assertTrue(text.contains("25/09/2026 Tarde"));assertTrue(text.contains("25/09/2026 Manhã"));
+            assertTrue(text.contains("Mudança de período:"));
             assertFalse(text.contains("999"));assertFalse(text.contains("registradoPor"));
             var dir=java.nio.file.Path.of("target","report-test");java.nio.file.Files.createDirectories(dir);
             java.nio.file.Files.write(dir.resolve("relatorio.pdf"),bytes);
@@ -35,7 +37,7 @@ class RelatorioUnidadeTest {
         var unit=new UnidadeAtendimento();unit.setNome("Sem registros");unit.setEndereco("Rua");
         when(units.findById(1L)).thenReturn(Optional.of(unit));
         when(history.findTop100ByUnidadeAtendimentoIdOrderByRegistradoEmDescIdDesc(1L)).thenReturn(List.of());
-        try(var pdf=Loader.loadPDF(new RelatorioUnidadeService(units,history).gerar(1L))) {
+        try(var pdf=Loader.loadPDF(new RelatorioUnidadeService(units,history,new TurnoReferenciaService("06:00","12:00","18:00")).gerar(1L))) {
             String text=new PDFTextStripper().getText(pdf);assertTrue(text.contains("Nenhum registro"));assertFalse(text.contains("Ocupação média:"));
         }
     }

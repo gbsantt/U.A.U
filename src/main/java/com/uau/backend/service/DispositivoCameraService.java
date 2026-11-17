@@ -61,8 +61,8 @@ public class DispositivoCameraService {
             || !Boolean.TRUE.equals(d.getAtivo()) || d.getChaveRevogadaEm()!=null) throw naoAutorizado();
         int quantidade=dto.quantidadePessoas();
         if(dto.medicaoId()!=null && historico.existsByDispositivoIdAndMedicaoId(d.getId(),dto.medicaoId())) return;
-        if(quantidade<0 || quantidade>unidade.getCapacidadeAreaMonitorada())
-            throw new ApiException(400,"OCUPACAO_INVALIDA","A quantidade deve estar entre zero e a capacidade da área monitorada.");
+        if(quantidade<0)
+            throw new ApiException(400,"OCUPACAO_INVALIDA","A quantidade deve ser maior do que zero.");
         var now=LocalDateTime.now();
         unidade.setOcupacaoAtual(quantidade); unidade.setUltimaAtualizacao(now);
         var h=new HistoricoOcupacao(); h.setUnidadeAtendimento(unidade); h.setDispositivo(d);

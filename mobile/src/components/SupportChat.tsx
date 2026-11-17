@@ -66,7 +66,7 @@ export default function SupportChat({navigation,id,admin=false}:{navigation:any;
         </View>;
     }
     return <ScreenLayout title="Chat de suporte" onBack={()=>navigation.canGoBack()?navigation.goBack():navigation.navigate("Home")}>
-        <Text style={ui.muted}>Converse com a equipe UAU. As respostas aparecerão aqui quando a equipe atender.</Text>
+        <Text style={ui.muted}>Você pode registrar sua solicitação a qualquer horário, enquanto o sistema estiver disponível. O atendimento humano depende da disponibilidade da equipe; não há plantão garantido. As respostas são consultadas a cada 5 segundos com esta conversa aberta.</Text>
         {!allowed?<View style={ui.card}>
             <Text style={ui.text}>{admin?"Acesso restrito à equipe autorizada.":"Entre na sua conta para conversar com o suporte e acompanhar suas mensagens."}</Text>
             <Button title="Entrar" onPress={()=>navigation.navigate("Login")}/>
@@ -75,7 +75,7 @@ export default function SupportChat({navigation,id,admin=false}:{navigation:any;
             {data&&<Text style={ui.muted}>Conversa #{data.id} · {data.status.replaceAll("_"," ")}</Text>}
             {admin&&owner&&<Text style={ui.muted}>{owner}</Text>}
             <ErrorNotice message={syncError}/>{syncError&&<Button title="Atualizar conversa" secondary onPress={()=>setRetry(n=>n+1)}/>}
-            <ScrollView ref={scroll} style={{height:360,flexGrow:0}} contentContainerStyle={{gap:12,paddingVertical:8}} onContentSizeChange={()=>scroll.current?.scrollToEnd({animated:true})}>
+            <ScrollView ref={scroll} style={{maxHeight:360,flexGrow:0}} contentContainerStyle={{gap:12,paddingVertical:8}} onContentSizeChange={()=>scroll.current?.scrollToEnd({animated:true})}>
                 {bubble("welcome","Olá! Como podemos ajudar? Envie sua dúvida ou conte o que aconteceu.",true)}
                 {loading&&<Text style={ui.muted}>Carregando conversa…</Text>}
                 {data&&bubble("first",data.descricao,false,data.createdAt)}

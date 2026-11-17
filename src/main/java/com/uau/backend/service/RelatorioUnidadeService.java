@@ -16,10 +16,11 @@ import java.util.*;
 public class RelatorioUnidadeService {
     private final UnidadeAtendimentoRepository unidades;
     private final HistoricoOcupacaoRepository historico;
+    private final TurnoReferenciaService turnos;
     private static final DateTimeFormatter DATA=DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-    private static final String COLUNAS=String.format("%-19s     %7s    %8s     %s","Data/hora","Pessoas","Ocupação","Origem");
-    public RelatorioUnidadeService(UnidadeAtendimentoRepository unidades,HistoricoOcupacaoRepository historico) {
-        this.unidades=unidades; this.historico=historico;
+    private static final String COLUNAS=String.format("%-19s  %-6s  %7s  %8s  %s","Data/hora","Turno","Pessoas","Ocupação","Origem");
+    public RelatorioUnidadeService(UnidadeAtendimentoRepository unidades,HistoricoOcupacaoRepository historico,TurnoReferenciaService turnos) {
+        this.unidades=unidades; this.historico=historico; this.turnos=turnos;
     }
     @Transactional(readOnly=true)
     public byte[] gerar(Long id) throws IOException {
@@ -34,6 +35,9 @@ public class RelatorioUnidadeService {
         linhas.add("Horários conforme armazenados no servidor, sem fuso registrado.");
         linhas.add("Percentuais originais de cada medição; não recalculados pela capacidade atual.");
         linhas.add("As contagens representam a área monitorada, não toda a unidade.");
+        linhas.add("Turnos de referência: "+turnos.horarios());
+        linhas.add("Noite após meia-noite pertence ao dia de início do turno.");
+        linhas.add("Períodos calculados pelo horário armazenado; não comprovam troca de equipe.");
         linhas.add("Registros disponíveis neste relatório: "+registros.size());
         if(!registros.isEmpty()) {
             linhas.add("Período: "+DATA.format(registros.getLast().getRegistradoEm())+" a "+DATA.format(registros.getFirst().getRegistradoEm()));
@@ -42,11 +46,27 @@ public class RelatorioUnidadeService {
                 registros.stream().mapToDouble(h->h.getPercentualOcupacao()).average().orElseThrow()));
             linhas.add("Médias por amostra, sem ponderação pelo intervalo entre medições.");
         }
+        if(!registros.isEmpty()) {
+            linhas.add("Resumo por data de início e turno de referência:");
+            var grupos=new LinkedHashMap<String,java.util.IntSummaryStatistics>();
+            for(var h:registros) grupos.computeIfAbsent(turnos.referencia(h.getRegistradoEm()),k->new java.util.IntSummaryStatistics()).accept(h.getQuantidadePessoas());
+            grupos.forEach((periodo,resumo)->linhas.add(String.format(Locale.forLanguageTag("pt-BR"),
+                "%s: %d amostras | mín %d | máx %d | média %.1f",periodo,resumo.getCount(),resumo.getMin(),resumo.getMax(),resumo.getAverage())));
+            linhas.add("Contagens de amostras não são somadas como total de pessoas únicas.");
+        }
         linhas.add("");
         linhas.add(COLUNAS);
         if(registros.isEmpty()) linhas.add("Nenhum registro histórico disponível para esta unidade.");
-        for(var h:registros) linhas.add(String.format(Locale.forLanguageTag("pt-BR"),"%s     %7d    %7.1f%%     %s",
-            DATA.format(h.getRegistradoEm()),h.getQuantidadePessoas(),h.getPercentualOcupacao(),h.getOrigem()==null?"Não informada":h.getOrigem().name()));
+        String anterior=null;
+        for(var h:registros) {
+            String periodo=turnos.referencia(h.getRegistradoEm());
+            if(!periodo.equals(anterior)) {
+                linhas.add((anterior==null?"Período: ":"Mudança de período: ")+periodo);
+                anterior=periodo;
+            }
+            linhas.add(String.format(Locale.forLanguageTag("pt-BR"),"%s  %-6s  %7d  %7.1f%%  %s",
+                DATA.format(h.getRegistradoEm()),turnos.nome(h.getRegistradoEm()),h.getQuantidadePessoas(),h.getPercentualOcupacao(),h.getOrigem()==null?"Não informada":h.getOrigem().name()));
+        }
         try(var doc=new PDDocument();var output=new ByteArrayOutputStream()) {
             var font=new PDType1Font(Standard14Fonts.FontName.COURIER);
             var wrapped=new ArrayList<String>();

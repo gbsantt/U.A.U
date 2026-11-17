@@ -1,0 +1,587 @@
+﻿{
+    "data":  "2026-11-17",
+    "observacao":  "Build local e dados fictícios. Execução do motor axe-core, não das extensões WAVE/axe DevTools. Zero violações não elimina a necessidade de revisão manual.",
+    "estadosAvaliados":  13,
+    "resultados":  [
+                       {
+                           "arquivo":  "_acesso-light-1280.json",
+                           "url":  "http://127.0.0.1:18081/acesso?__qa=1",
+                           "executadoEm":  "2026-11-17T18:01:02.613Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  1280,
+                                            "windowHeight":  720,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  30,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-19uklk0 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_avaliar-light-1280.json",
+                           "url":  "http://127.0.0.1:18081/avaliar?unidadeId=1\u0026__qa=1",
+                           "executadoEm":  "2026-11-17T17:58:59.523Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  1280,
+                                            "windowHeight":  720,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  34,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "color-contrast",
+                                                     "descricao":  "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          "label:nth-child(1) \u003e span"
+                                                                                      ],
+                                                                           "html":  "\u003cspan aria-hidden=\"true\" style=\"font-size: 36px; color: rgb(47, 104, 7); pointer-events: none;\"\u003e★\u003c/span\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Element content contains only non-text characters"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          "label:nth-child(2) \u003e span"
+                                                                                      ],
+                                                                           "html":  "\u003cspan aria-hidden=\"true\" style=\"font-size: 36px; color: rgb(47, 104, 7); pointer-events: none;\"\u003e★\u003c/span\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Element content contains only non-text characters"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          "label:nth-child(3) \u003e span"
+                                                                                      ],
+                                                                           "html":  "\u003cspan aria-hidden=\"true\" style=\"font-size: 36px; color: rgb(47, 104, 7); pointer-events: none;\"\u003e★\u003c/span\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Element content contains only non-text characters"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          "label:nth-child(4) \u003e span"
+                                                                                      ],
+                                                                           "html":  "\u003cspan aria-hidden=\"true\" style=\"font-size: 36px; color: rgb(47, 104, 7); pointer-events: none;\"\u003e★\u003c/span\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Element content contains only non-text characters"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          "label:nth-child(5) \u003e span"
+                                                                                      ],
+                                                                           "html":  "\u003cspan aria-hidden=\"true\" style=\"font-size: 36px; color: rgb(89, 99, 83); pointer-events: none;\"\u003e☆\u003c/span\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Element content contains only non-text characters"
+                                                                       }
+                                                                   ]
+                                                 },
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-19uklk0 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_avaliar-light-320.json",
+                           "url":  "http://127.0.0.1:18081/avaliar?unidadeId=1\u0026__qa=1",
+                           "executadoEm":  "2026-11-17T17:59:04.714Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  320,
+                                            "windowHeight":  740,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  34,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "color-contrast",
+                                                     "descricao":  "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          "label:nth-child(1) \u003e span"
+                                                                                      ],
+                                                                           "html":  "\u003cspan aria-hidden=\"true\" style=\"font-size: 36px; color: rgb(47, 104, 7); pointer-events: none;\"\u003e★\u003c/span\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Element content contains only non-text characters"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          "label:nth-child(2) \u003e span"
+                                                                                      ],
+                                                                           "html":  "\u003cspan aria-hidden=\"true\" style=\"font-size: 36px; color: rgb(47, 104, 7); pointer-events: none;\"\u003e★\u003c/span\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Element content contains only non-text characters"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          "label:nth-child(3) \u003e span"
+                                                                                      ],
+                                                                           "html":  "\u003cspan aria-hidden=\"true\" style=\"font-size: 36px; color: rgb(47, 104, 7); pointer-events: none;\"\u003e★\u003c/span\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Element content contains only non-text characters"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          "label:nth-child(4) \u003e span"
+                                                                                      ],
+                                                                           "html":  "\u003cspan aria-hidden=\"true\" style=\"font-size: 36px; color: rgb(47, 104, 7); pointer-events: none;\"\u003e★\u003c/span\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Element content contains only non-text characters"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          "label:nth-child(5) \u003e span"
+                                                                                      ],
+                                                                           "html":  "\u003cspan aria-hidden=\"true\" style=\"font-size: 36px; color: rgb(89, 99, 83); pointer-events: none;\"\u003e☆\u003c/span\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Element content contains only non-text characters"
+                                                                       }
+                                                                   ]
+                                                 },
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-19uklk0 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_entrar-light-1280.json",
+                           "url":  "http://127.0.0.1:18081/entrar?__qa=1",
+                           "executadoEm":  "2026-11-17T18:00:56.476Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  1280,
+                                            "windowHeight":  720,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  34,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-19uklk0 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_-light-1280.json",
+                           "url":  "http://127.0.0.1:18081/?__qa=1",
+                           "executadoEm":  "2026-11-17T17:56:24.679Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  1280,
+                                            "windowHeight":  720,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  39,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-16uyjmq"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Abrir meu perfil\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-19uklk0 r-1jj8364 r-1awozwy r-16uyjmq r-1ugchlj r-1777fci r-1mkv55d r-1e084wi r-usgzl9\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".uau-location"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton class=\"uau-location\" disabled=\"\" aria-label=\"Centralizar na minha localização\" title=\"Minha localização\"\u003e◎\u003c/button\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_-light-320.json",
+                           "url":  "http://127.0.0.1:18081/?__qa=1",
+                           "executadoEm":  "2026-11-17T18:00:48.193Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  320,
+                                            "windowHeight":  740,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  40,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-16uyjmq"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Abrir meu perfil\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-19uklk0 r-1jj8364 r-1awozwy r-16uyjmq r-1ugchlj r-1777fci r-1mkv55d r-1e084wi r-usgzl9\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".uau-marker.maplibregl-marker.maplibregl-marker-anchor-center:nth-child(2)"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton type=\"button\" class=\"uau-marker maplibreg...\" title=\"Unidade de demonstra...\" aria-label=\"Unidade de demonstra...\" style=\"background-color: rg...\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".uau-marker.maplibregl-marker.maplibregl-marker-anchor-center:nth-child(3)"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton type=\"button\" class=\"uau-marker maplibreg...\" title=\"Unidade de demonstra...\" aria-label=\"Unidade de demonstra...\" style=\"background-color: rg...\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       },
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".uau-location"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton class=\"uau-location\" disabled=\"\" aria-label=\"Centralizar na minha localização\" title=\"Minha localização\"\u003e◎\u003c/button\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_perfil-dark-1280.json",
+                           "url":  "http://127.0.0.1:18081/perfil?__qa=1",
+                           "executadoEm":  "2026-11-17T17:58:13.800Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  1280,
+                                            "windowHeight":  720,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  31,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-k1sle8 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_perfil-light-1280.json",
+                           "url":  "http://127.0.0.1:18081/perfil?__qa=1",
+                           "executadoEm":  "2026-11-17T17:58:09.144Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  1280,
+                                            "windowHeight":  720,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  31,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-19uklk0 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_suporte_1-light-1280.json",
+                           "url":  "http://127.0.0.1:18081/suporte/1",
+                           "executadoEm":  "2026-11-17T17:58:39.925Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  1280,
+                                            "windowHeight":  720,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  35,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-19uklk0 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_suporte_1-light-320.json",
+                           "url":  "http://127.0.0.1:18081/suporte/1?__qa=1",
+                           "executadoEm":  "2026-11-17T17:59:12.850Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  320,
+                                            "windowHeight":  740,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  35,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-19uklk0 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_suporte-light-1280.json",
+                           "url":  "http://127.0.0.1:18081/suporte?__qa=1",
+                           "executadoEm":  "2026-11-17T17:58:40.657Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  1280,
+                                            "windowHeight":  720,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  30,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-19uklk0 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_unidades_1-light-1280.json",
+                           "url":  "http://127.0.0.1:18081/unidades/1",
+                           "executadoEm":  "2026-11-17T17:56:29.733Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  1280,
+                                            "windowHeight":  720,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  36,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-19uklk0 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       },
+                       {
+                           "arquivo":  "_unidades_1-light-320.json",
+                           "url":  "http://127.0.0.1:18081/unidades/1?__qa=1",
+                           "executadoEm":  "2026-11-17T18:00:40.090Z",
+                           "motor":  {
+                                         "name":  "axe-core",
+                                         "version":  "4.14.1"
+                                     },
+                           "ambiente":  {
+                                            "userAgent":  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+                                            "windowWidth":  320,
+                                            "windowHeight":  740,
+                                            "orientationAngle":  180,
+                                            "orientationType":  "landscape-primary"
+                                        },
+                           "violacoes":  [
+
+                                         ],
+                           "aprovacoes":  36,
+                           "revisaoManual":  [
+                                                 {
+                                                     "regra":  "label-content-name-mismatch",
+                                                     "descricao":  "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
+                                                     "ajuda":  "https://dequeuniversity.com/rules/axe/4.14/label-content-name-mismatch?application=axeAPI",
+                                                     "elementos":  [
+                                                                       {
+                                                                           "target":  [
+                                                                                          ".r-k200y"
+                                                                                      ],
+                                                                           "html":  "\u003cbutton aria-label=\"Voltar\" role=\"button\" tabindex=\"0\" class=\"css-g5y9jx r-1loqt21 r-1otgn73 r-1awozwy r-k200y r-19uklk0 r-1fuqb1j r-h3s6tt r-1777fci r-rwqe4o\" type=\"button\"\u003e",
+                                                                           "failureSummary":  "Fix any of the following:\n  Unable to determine if the visible text is part of the accessible name"
+                                                                       }
+                                                                   ]
+                                                 }
+                                             ]
+                       }
+                   ]
+}

@@ -67,6 +67,7 @@ export default function UnitMapCard({
             </Text>
 
             <Pressable
+                accessibilityRole="button"
                 style={styles.button}
                 onPress={onPress}
             >
@@ -157,7 +158,6 @@ const createStyles = (colors: Palette) => StyleSheet.create({
 
         color: colors.textSecondary,
 
-        opacity: 0.7,
     },
 
     button: {

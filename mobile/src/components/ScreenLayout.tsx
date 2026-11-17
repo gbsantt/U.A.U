@@ -10,7 +10,7 @@ export function ScreenLayout({children,title,onBack}:{children:ReactNode;title?:
     const {colors}=useTheme();
     const ui=useUI();
 
-    return <SafeAreaView style={{flex:1,backgroundColor:colors.background}}>
+    return <SafeAreaView role="main" style={{flex:1,backgroundColor:colors.background}}>
         <KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS==="ios"?"padding":undefined}>
             <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={ui.page}>
                 {onBack && <Pressable accessibilityRole="button" accessibilityLabel="Voltar" onPress={onBack} style={ui.back}><Text style={ui.backIcon}>‹</Text></Pressable>}
@@ -45,7 +45,7 @@ const createStyles = (colors: Palette) => StyleSheet.create({
     title:{fontSize:28,fontWeight:"800",color:colors.text,flexShrink:1},
     label:{fontSize:14,fontWeight:"700",color:colors.text},
     input:{minHeight:52,borderWidth:1,borderColor:colors.border,borderRadius:16,padding:16,fontSize:16,color:colors.text,backgroundColor:colors.primaryLight},
-    button:{minHeight:48,padding:14,borderRadius:14,backgroundColor:colors.primary,alignItems:"center",justifyContent:"center"},
+    button:{minHeight:48,maxWidth:"100%",padding:14,borderRadius:14,backgroundColor:colors.primary,alignItems:"center",justifyContent:"center"},
     buttonText:{color:"#fff",fontWeight:"700",fontSize:15,textAlign:"center"},
     link:{color:colors.primaryDark,fontWeight:"700",fontSize:15},
     error:{color:colors.danger,fontSize:15,lineHeight:22},

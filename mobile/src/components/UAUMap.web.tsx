@@ -95,7 +95,10 @@ export default function UAUMap({ unidades, localizacaoUsuario, onSelecionarUnida
             button.type = "button";
             button.className = "uau-marker";
             button.style.backgroundColor = status.color;
-            button.textContent = "H";
+            const symbol=document.createElement("span");
+            symbol.textContent="H";
+            symbol.style.cssText="background:#fff;color:#171717;border-radius:4px;padding:0 3px";
+            button.appendChild(symbol);
             button.title = `${unidade.nome} — ${status.text}`;
             button.setAttribute("aria-label", button.title);
             const marker=new Marker({ element: button })
@@ -117,6 +120,7 @@ export default function UAUMap({ unidades, localizacaoUsuario, onSelecionarUnida
         if (!instancia || !pronto || !localizacaoUsuario) return;
         const point = document.createElement("div");
         point.className = "uau-user-marker";
+        point.setAttribute("role", "img");
         point.setAttribute("aria-label", "Sua localização");
         const coordinates: [number, number] = [localizacaoUsuario.longitude, localizacaoUsuario.latitude];
         const marker = new Marker({ element: point }).setLngLat(coordinates).addTo(instancia);
@@ -129,7 +133,7 @@ export default function UAUMap({ unidades, localizacaoUsuario, onSelecionarUnida
 
     return (
         <div className="uau-map-shell">
-            <div ref={container} className="uau-map" aria-label="Mapa UAU de unidades de saúde" />
+            <div ref={container} className="uau-map" role="region" aria-label="Mapa UAU de unidades de saúde" />
             {erro && <div role="status" className="uau-map-message">
                 Não foi possível carregar o mapa completo. As unidades continuam disponíveis na lista.
                 <button onClick={() => setTentativa((value) => value + 1)}>Tentar novamente</button>

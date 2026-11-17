@@ -210,11 +210,14 @@ class UAUIntegrationTest {
   assertEquals(204,measurement(key,payload).status());assertEquals(204,measurement(key,payload).status());
   assertEquals(1,sql.queryForObject("SELECT count(*) FROM historico_ocupacao",Integer.class));
   assertEquals("ONLINE",ok("GET","/unidades/"+id+"/situacao",null,null,200).path("statusCamera").asText());
-  assertEquals(400,measurement(key,Map.of("quantidadePessoas",101)).status());
+  // Capacity is a reference: overcrowding must remain representable.
+  assertEquals(204,measurement(key,Map.of("quantidadePessoas",101)).status());
+  assertEquals(101.0,ok("GET","/unidades/"+id+"/situacao",null,null,200).path("percentualOcupacao").asDouble());
+  assertEquals(400,measurement(key,Map.of("quantidadePessoas",-1)).status());
   // Force a database failure AFTER occupancy has been dirtied: the whole transaction must roll back.
   sql.execute("ALTER TABLE historico_ocupacao ADD CONSTRAINT test_fail CHECK (quantidade_pessoas <> 33)");
   assertEquals(409,measurement(key,Map.of("quantidadePessoas",33)).status());
-  assertEquals(25,sql.queryForObject("SELECT ocupacao_atual FROM unidade_atendimento WHERE id=?",Integer.class,id));
+  assertEquals(101,sql.queryForObject("SELECT ocupacao_atual FROM unidade_atendimento WHERE id=?",Integer.class,id));
   sql.execute("ALTER TABLE historico_ocupacao DROP CONSTRAINT test_fail");
   var rotated=ok("POST","/admin/dispositivos/"+device+"/regenerar-chave",admin,null,200);
   assertEquals(401,measurement(key,payload).status());
@@ -279,6 +282,24 @@ class UAUIntegrationTest {
   assertEquals(1,sql.queryForObject("SELECT count(*) FROM "+legacy+".dispositivo_camera WHERE ativo",Integer.class));
   assertEquals(7,sql.queryForObject("SELECT ocupacao_atual FROM "+legacy+".unidade_atendimento",Integer.class));
   assertEquals(DispositivoCameraService.hash("legacy-test-key-A"),sql.queryForObject("SELECT chave_hash FROM "+legacy+".dispositivo_camera WHERE id=1",String.class));
+ }
+ @Test void legacyUserUnitLinkPreservesUserWhenUnitIsDeleted()throws Exception{
+  String legacy="legacy_user_"+UUID.randomUUID().toString().replace("-","");
+  String url=System.getenv("TEST_DB_URL"),username=System.getenv().getOrDefault("TEST_DB_USERNAME","uau_test");
+  org.flywaydb.core.Flyway.configure().dataSource(url,username,"").schemas(legacy).defaultSchema(legacy).target("6").load().migrate();
+  try(var c=java.sql.DriverManager.getConnection(url,username,"");var s=c.createStatement()){
+   s.execute("SET search_path TO "+legacy);
+   s.execute("INSERT INTO unidade_atendimento(nome,endereco,ultima_atualizacao,tipo,capacidade_area_monitorada) VALUES ('Legada','Rua',now(),'UPA',100)");
+   s.execute("ALTER TABLE usuario ADD COLUMN unidade_atendimento_id bigint NOT NULL CONSTRAINT fk_antiga_usuario_unidade REFERENCES unidade_atendimento(id)");
+   s.execute("INSERT INTO usuario(nome,email,senha_hash,tipo,unidade_atendimento_id) VALUES ('Legado','legacy@test.local','hash','USUARIO',1)");
+   var bloqueio=assertThrows(java.sql.SQLException.class,()->s.execute("DELETE FROM unidade_atendimento WHERE id=1"));
+   assertEquals("23503",bloqueio.getSQLState());
+  }
+  org.flywaydb.core.Flyway.configure().dataSource(url,username,"").schemas(legacy).defaultSchema(legacy).load().migrate();
+  assertEquals(1L,sql.queryForObject("SELECT unidade_atendimento_id FROM "+legacy+".usuario",Long.class));
+  sql.update("DELETE FROM "+legacy+".unidade_atendimento WHERE id=1");
+  assertEquals(1,sql.queryForObject("SELECT count(*) FROM "+legacy+".usuario WHERE unidade_atendimento_id IS NULL AND email='legacy@test.local' AND senha_hash='hash' AND ativo",Integer.class));
+  assertEquals(0,sql.queryForObject("SELECT count(*) FROM "+legacy+".unidade_atendimento",Integer.class));
  }
  @Test void cameraWithoutUnitIsRejectedByDatabaseAndInactiveKeyFails()throws Exception {
   long id=unit();var c=camera(id,false);
