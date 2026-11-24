@@ -7,7 +7,7 @@ export type UnidadeCadastro = {
     id: number; nome: string; endereco: string; telefone: string | null;
     capacidadeAreaMonitorada: number; ocupacaoAtual: number; percentualOcupacao: number;
     nivelOcupacao: string; latitude: number | null; longitude: number | null;
-    ultimaAtualizacao: string | null; tipo: TipoUnidade;
+    ultimaAtualizacao: string | null; tipo: TipoUnidade; horariosTrocaTurno?: string[];
 };
 
 
@@ -44,6 +44,10 @@ export type Unidade = {
     statusMedicao: string;
 
     statusCamera: string;
+
+    horariosTrocaTurno?: string[];
+
+    origemMedicao?: "CAMERA" | "MANUAL" | null;
 
     tipo: TipoUnidade;
 };

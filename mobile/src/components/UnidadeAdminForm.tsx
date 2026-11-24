@@ -82,6 +82,8 @@ export default function UnidadeAdminForm({
     ] = useState("");
 
 
+    const [horarios, setHorarios] = useState("");
+
     const [
         tipo,
         setTipo,
@@ -217,6 +219,8 @@ export default function UnidadeAdminForm({
                         unidade.capacidadeAreaMonitorada
                     )
                 );
+
+                setHorarios(unidade.horariosTrocaTurno?.join(", ") ?? "");
 
                 setTipo(
                     unidade.tipo
@@ -399,6 +403,12 @@ export default function UnidadeAdminForm({
         }
 
 
+        const horariosTrocaTurno = horarios.trim() ? horarios.split(",").map(hora => hora.trim()) : [];
+        if (horariosTrocaTurno.length > 24 || horariosTrocaTurno.some(hora => !/^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/.test(hora))) {
+            setError("Informe até 24 horários no formato HH:MM, separados por vírgulas.");
+            return;
+        }
+
         const data = {
 
             nome:
@@ -414,6 +424,7 @@ export default function UnidadeAdminForm({
             cap,
 
             tipo,
+            horariosTrocaTurno,
 
             latitude:
             localizacao.latitude,
@@ -700,6 +711,13 @@ export default function UnidadeAdminForm({
                             }
                         />
 
+
+                        <Field
+                            label="Horários de troca de turno (HH:MM, separados por vírgulas)"
+                            placeholder="07:00, 19:00"
+                            value={horarios}
+                            onChangeText={setHorarios}
+                        />
 
                         <Text
                             style={

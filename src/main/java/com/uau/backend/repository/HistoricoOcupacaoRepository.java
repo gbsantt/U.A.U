@@ -7,8 +7,8 @@ public interface HistoricoOcupacaoRepository extends JpaRepository<HistoricoOcup
     boolean existsByDispositivoIdAndMedicaoId(Long dispositivoId,java.util.UUID medicaoId);
     List<HistoricoOcupacao> findTop100ByUnidadeAtendimentoIdOrderByRegistradoEmDesc(Long id);
     List<HistoricoOcupacao> findTop100ByUnidadeAtendimentoIdOrderByRegistradoEmDescIdDesc(Long id);
-    interface Amostra { Long getUnidadeId(); Integer getQuantidadePessoas(); }
-    @Query("select h.unidadeAtendimento.id as unidadeId, h.quantidadePessoas as quantidadePessoas from HistoricoOcupacao h where h.unidadeAtendimento.id in :ids and h.origem=com.uau.backend.entity.OrigemMedicao.CAMERA and h.registradoEm>=:inicio order by h.registradoEm desc, h.id desc")
+    interface Amostra { Long getUnidadeId(); Integer getQuantidadePessoas(); OrigemMedicao getOrigem(); LocalDateTime getRegistradoEm(); }
+    @Query("select h.unidadeAtendimento.id as unidadeId, h.quantidadePessoas as quantidadePessoas, h.origem as origem, h.registradoEm as registradoEm from HistoricoOcupacao h where h.unidadeAtendimento.id in :ids and h.origem is not null and h.registradoEm>=:inicio order by h.registradoEm desc, h.id desc")
     List<Amostra> janela(Collection<Long> ids,LocalDateTime inicio);
     @Modifying(flushAutomatically=true)
     @Query("delete from HistoricoOcupacao h where h.unidadeAtendimento.id=:id")

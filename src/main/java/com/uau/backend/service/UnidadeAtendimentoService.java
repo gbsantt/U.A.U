@@ -35,7 +35,9 @@ public class UnidadeAtendimentoService {
     @Transactional public CadastroUnidadeResponseDTO cadastrarUnidades(UnidadeAtendimentoRequestDTO d) {
         var coords=coordenadas(d.endereco(),d.latitude(),d.longitude());
         var u=new UnidadeAtendimento(); preencher(u,d.nome(),d.endereco(),d.telefone(),d.capacidadeAreaMonitorada(),d.tipo());
-        u.setLatitude(coords.latitude()); u.setLongitude(coords.longitude()); unidades.saveAndFlush(u);
+        u.setLatitude(coords.latitude()); u.setLongitude(coords.longitude());
+        if(d.horariosTrocaTurno()!=null) u.setHorariosTrocaTurno(d.horariosTrocaTurno());
+        unidades.saveAndFlush(u);
         CredencialCameraResponseDTO camera=null;
         if(d.nomeCamera()!=null && !d.nomeCamera().isBlank()) camera=cameras.cadastrar(u.getId(),new CriarDispositivoRequestDTO(d.nomeCamera(),true));
         return new CadastroUnidadeResponseDTO(dto(u),camera==null?null:camera.dispositivo().id(),
@@ -43,11 +45,12 @@ public class UnidadeAtendimentoService {
     }
     @Transactional public UnidadeAtendimentoResponseDTO atualizarUnidade(Long id,AtualizarUnidadeRequestDTO d) {
         var u=unidades.bloquear(id).orElseThrow(UnidadeNaoEncontradaException::new);
-        if(d.capacidadeAreaMonitorada()<u.getOcupacaoAtual()) throw new IllegalArgumentException("A capacidade não pode ser menor que a ocupação atual.");
         if(d.latitude()!=null || d.longitude()!=null || !u.getEndereco().equalsIgnoreCase(d.endereco().trim())) {
             var coords=coordenadas(d.endereco(),d.latitude(),d.longitude()); u.setLatitude(coords.latitude()); u.setLongitude(coords.longitude());
         }
-        preencher(u,d.nome(),d.endereco(),d.telefone(),d.capacidadeAreaMonitorada(),d.tipo()); return dto(unidades.save(u));
+        preencher(u,d.nome(),d.endereco(),d.telefone(),d.capacidadeAreaMonitorada(),d.tipo());
+        if(d.horariosTrocaTurno()!=null) u.setHorariosTrocaTurno(d.horariosTrocaTurno());
+        return dto(unidades.save(u));
     }
     private GeocodificacaoService.Coordenadas coordenadas(String endereco,Double lat,Double lon) {
         if((lat==null)!=(lon==null)) throw new IllegalArgumentException("Informe latitude e longitude juntas.");
@@ -71,7 +74,6 @@ public class UnidadeAtendimentoService {
     }
     @Transactional public UnidadeAtendimentoResponseDTO atualizarOcupacao(Long id,AtualizarOcupacaoDTO d,Usuario usuario) {
         var u=unidades.bloquear(id).orElseThrow(UnidadeNaoEncontradaException::new);
-        if(d.quantidadePessoas()<0 || d.quantidadePessoas()>u.getCapacidadeAreaMonitorada()) throw new IllegalArgumentException("Ocupação fora da capacidade.");
         u.setOcupacaoAtual(d.quantidadePessoas()); u.setUltimaAtualizacao(LocalDateTime.now());
         var h=new HistoricoOcupacao(); h.setUnidadeAtendimento(u); h.setQuantidadePessoas(d.quantidadePessoas());
         h.setPercentualOcupacao(SituacaoUnidadeService.percentual(u)); h.setRegistradoPor(usuario);
@@ -92,6 +94,6 @@ public class UnidadeAtendimentoService {
     private UnidadeAtendimentoResponseDTO dto(UnidadeAtendimento u) {
         double p=SituacaoUnidadeService.percentual(u);
         return new UnidadeAtendimentoResponseDTO(u.getId(),u.getNome(),u.getEndereco(),u.getTelefone(),u.getCapacidadeAreaMonitorada(),
-            u.getOcupacaoAtual(),p,SituacaoUnidadeService.nivel(p),u.getLatitude(),u.getLongitude(),u.getUltimaAtualizacao(),u.getTipo());
+            u.getOcupacaoAtual(),p,SituacaoUnidadeService.nivel(p),u.getLatitude(),u.getLongitude(),u.getUltimaAtualizacao(),u.getTipo(),u.getHorariosTrocaTurno());
     }
 }

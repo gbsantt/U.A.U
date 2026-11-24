@@ -89,7 +89,7 @@ export const listarUsuariosAdmin = (token:string) => request<UsuarioAdmin[]>("/u
 export const buscarUsuarioAdmin = (id:number,token:string,signal?:AbortSignal) => request<UsuarioAdmin>(`/usuarios/${id}`,{token,signal});
 export const criarUsuarioAdmin = (data:CadastroUsuarioPayload & {tipo:TipoUsuario},token:string) => request<UsuarioAdmin>("/usuarios",{method:"POST",data,token});
 export const atualizarUsuarioAdmin = (id:number,data:Omit<UsuarioAdmin,"id">,token:string) => request<UsuarioAdmin>(`/usuarios/${id}`,{method:"PUT",data,token});
-export type AtualizarUnidadeAdminPayload = { nome:string; endereco:string; telefone:string|null; capacidadeAreaMonitorada:number; tipo:TipoUnidade; latitude?:number; longitude?:number };
+export type AtualizarUnidadeAdminPayload = { nome:string; endereco:string; telefone:string|null; capacidadeAreaMonitorada:number; tipo:TipoUnidade; horariosTrocaTurno?:string[]; latitude?:number; longitude?:number };
 export type CriarUnidadeAdminPayload = AtualizarUnidadeAdminPayload & { nomeCamera?:string };
 export type CadastroUnidadeAdminResponse = { unidade:UnidadeCadastro; cameraId:number|null; cameraNome:string|null; chaveApi:string|null };
 export const criarUnidadeAdmin = (data:CriarUnidadeAdminPayload,token:string) => request<CadastroUnidadeAdminResponse>("/unidades",{method:"POST",data,token});

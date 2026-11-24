@@ -6,6 +6,7 @@ import com.uau.backend.entity.StatusMedicao;
 import com.uau.backend.entity.TendenciaOcupacao;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record SituacaoUnidadeResponseDTO(
 
@@ -27,7 +28,9 @@ public record SituacaoUnidadeResponseDTO(
         StatusMedicao statusMedicao,
         StatusCamera statusCamera,
         RitmoOcupacao ritmoOcupacao,
-        com.uau.backend.entity.TipoUnidade tipo
+        com.uau.backend.entity.TipoUnidade tipo,
+        List<String> horariosTrocaTurno,
+        com.uau.backend.entity.OrigemMedicao origemMedicao
 
 ) {
 }

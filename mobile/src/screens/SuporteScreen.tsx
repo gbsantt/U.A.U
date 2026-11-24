@@ -6,7 +6,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { useAuth } from "../context/AuthContext";
 import { listarSuporte } from "../service/api";
-import { categorias,statusSuporte,CategoriaSuporte,StatusSuporte,Pagina,ResumoSuporte } from "../types/Suporte";
+import { categorias,rotulosCategoria,statusSuporte,rotulosStatusSuporte,CategoriaSuporte,StatusSuporte,Pagina,ResumoSuporte } from "../types/Suporte";
 import { ScreenLayout,Button,ErrorNotice,useUI } from "../components/ScreenLayout";
 import SupportChat from "../components/SupportChat";
 export function SupportList({navigation,admin=false}:{navigation:any;admin?:boolean}) {
@@ -28,12 +28,12 @@ export function SupportList({navigation,admin=false}:{navigation:any;admin?:bool
     return <ScreenLayout title={admin?"Gerenciar suporte":"Conversas com o suporte"} onBack={()=>navigation.goBack()}>
         {!admin&&<Button title="Iniciar conversa" onPress={()=>navigation.navigate("NovaSolicitacaoSuporte")}/>}
         {admin&&<><Text style={ui.label}>Status</Text><View style={ui.row}><Button title="Todos" secondary={!status} onPress={()=>{setStatus(undefined);setPage(0);}}/>
-            {statusSuporte.map(s=><Button key={s} title={s.replaceAll("_"," ")} secondary={status!==s} onPress={()=>{setStatus(s);setPage(0);}}/>)}</View>
+            {statusSuporte.map(s=><Button key={s} title={rotulosStatusSuporte[s]} secondary={status!==s} onPress={()=>{setStatus(s);setPage(0);}}/>)}</View>
         <Text style={ui.label}>Categoria</Text><View style={ui.row}><Button title="Todas" secondary={!categoria} onPress={()=>{setCategoria(undefined);setPage(0);}}/>
-            {categorias.map(c=><Button key={c} title={c.replaceAll("_"," ")} secondary={categoria!==c} onPress={()=>{setCategoria(c);setPage(0);}}/>)}</View></>}
+            {categorias.map(c=><Button key={c} title={rotulosCategoria[c]} secondary={categoria!==c} onPress={()=>{setCategoria(c);setPage(0);}}/>)}</View></>}
         <ErrorNotice message={error}/>{error&&<Button title="Tentar novamente" onPress={()=>setRetry(x=>x+1)}/>}
         {busy?<Text style={ui.text}>Carregando…</Text>:data?.content.length?data.content.map(s=><View key={s.id} style={ui.card}>
-            <Text style={ui.label}>{s.assunto}</Text><Text style={ui.text}>{s.categoria.replaceAll("_"," ")} · {s.status.replaceAll("_"," ")}</Text>
+            <Text style={ui.label}>{s.assunto}</Text><Text style={ui.text}>{rotulosCategoria[s.categoria]} · {rotulosStatusSuporte[s.status]}</Text>
             <Text style={ui.text}>{new Date(s.createdAt).toLocaleString("pt-BR")}</Text>
             <Button title="Abrir conversa" secondary onPress={()=>navigation.navigate(admin?"DetalheSuporteAdmin":"DetalheSuporte",{id:s.id})}/>
         </View>):!error&&<Text style={ui.text}>Nenhuma conversa encontrada.</Text>}

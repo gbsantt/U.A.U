@@ -1,6 +1,6 @@
 import { Text } from "../components/Typography";
 import { useCallback,useRef,useState } from "react";
-import { Modal, View } from "react-native";
+import { Linking, Modal, View } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/AppNavigator";
@@ -9,17 +9,33 @@ import { ApiError,Avaliacao,buscarAvaliacoes,buscarSituacaoUnidade,excluirAvalia
 import { Alert } from "../utils/alert";
 import { Unidade } from "../types/Unidade";
 import { useFavorites } from "../context/FavoritesContext";
-import { dadosAtuais, statusNoMapa } from "../utils/mapStatus";
+import { dadosAtuais, statusDaOcupacao, statusNoMapa } from "../utils/mapStatus";
 import { useAuth } from "../context/AuthContext";
 import { downloadReport } from "../service/downloadReport";
 import { appIsActive } from "../utils/activity";
 import { useTheme } from "../context/ThemeContext";
 import ManualCount from "../components/ManualCount";
+import { emTrocaDeTurno } from "../utils/trocaTurno";
 export default function UnitScreen({navigation,route}:NativeStackScreenProps<RootStackParamList,"Unit">){
     const ui=useUI();
     const {colors}=useTheme();
 
     const id=route.params.unidadeId;
+    const [agora,setAgora]=useState(()=>new Date());
+    const [rotasVisiveis,setRotasVisiveis]=useState(false);
+    const [erroRota,setErroRota]=useState("");
+    useFocusEffect(useCallback(()=>{
+        setRotasVisiveis(false);
+        setErroRota("");
+        let timer: ReturnType<typeof setTimeout>;
+        function atualizarHorario() {
+            const instante=new Date();
+            setAgora(instante);
+            timer=setTimeout(atualizarHorario,60000-instante.getTime()%60000);
+        }
+        atualizarHorario();
+        return ()=>clearTimeout(timer);
+    },[id]));
     const {usuario}=useAuth();
     const [reportBusy,setReportBusy]=useState(false),[reportError,setReportError]=useState("");
     const [loginVisible,setLoginVisible]=useState(false);
@@ -59,36 +75,65 @@ export default function UnitScreen({navigation,route}:NativeStackScreenProps<Roo
             .catch(e=>{if(!c.signal.aborted)setReviewError(e.message);});
         return ()=>{c.abort();clearTimeout(timer);};
     },[id,retry]));
-    const status=unidade?statusNoMapa(unidade,colors):undefined;
+    const conferenciaAtual=unidade?.origemMedicao==="MANUAL" && unidade.statusMedicao==="ATUALIZADA";
+    const ocupacaoDisponivel=unidade && (dadosAtuais(unidade) || conferenciaAtual);
+    const status=unidade && (conferenciaAtual
+        ? statusDaOcupacao(unidade.percentualOcupacao,colors)
+        : statusNoMapa(unidade,colors));
+    const horarios=unidade?.horariosTrocaTurno ?? [];
+    const emTroca=horarios.length>0 && emTrocaDeTurno(horarios,agora);
+
+    async function abrirRota(app: "maps" | "waze", endereco: string) {
+        setErroRota("");
+        const destino=encodeURIComponent(endereco);
+        const url=app==="maps"
+            ? `https://www.google.com/maps/dir/?api=1&destination=${destino}`
+            : `https://www.waze.com/ul?q=${destino}&navigate=yes`;
+        try { await Linking.openURL(url); }
+        catch { setErroRota("Não foi possível abrir a rota. Tente novamente."); }
+    }
     const media=avaliacoes.length?avaliacoes.reduce((sum,a)=>sum+a.nota,0)/avaliacoes.length:0;
     return <ScreenLayout title={unidade?.nome??"Unidade de atendimento"} onBack={()=>navigation.canGoBack()?navigation.goBack():navigation.navigate("Home")}>
         {missing?<Text style={ui.text}>Esta unidade não está mais disponível.</Text>:<>
         <ErrorNotice message={error}/>{error&&<Button title="Tentar novamente" onPress={()=>setRetry(n=>n+1)}/>}
         {!unidade&&!error&&<Text style={ui.text}>Carregando unidade…</Text>}
         {unidade&&<>
+            {emTroca&&<View accessibilityRole="alert" accessibilityLiveRegion="polite" style={[ui.card,{borderWidth:1,borderColor:colors.warning}]}>
+                <Text style={ui.sectionTitle}>Troca de turno em andamento</Text>
+                <Text style={ui.text}>A unidade está em horário de troca de turno. Os atendimentos podem sofrer atrasos nesse período.</Text>
+            </View>}
             <Text style={ui.muted}>Situação atual da unidade</Text>
             <View style={ui.card}>
                 <Text style={[ui.sectionTitle,{fontSize:12,letterSpacing:1}]}>OCUPAÇÃO ATUAL</Text>
-                <Text style={[ui.title,{fontSize:dadosAtuais(unidade)?40:24}]}>{dadosAtuais(unidade)?`${unidade.percentualOcupacao.toFixed(0)}%`:status!.text}</Text>
-                <Text style={ui.muted}>Última contagem: {unidade.ocupacaoAtual} de {unidade.capacidadeAreaMonitorada} pessoas</Text>
+                <Text style={[ui.title,{fontSize:ocupacaoDisponivel?40:24}]}>{ocupacaoDisponivel?`${unidade.percentualOcupacao.toFixed(0)}%`:status!.text}</Text>
+                <Text style={ui.muted}>Última contagem: {unidade.ocupacaoAtual} pessoas · Capacidade: {unidade.capacidadeAreaMonitorada}{conferenciaAtual?" · Conferência manual":""}</Text>
             </View>
             <View style={{height:6,borderRadius:3,backgroundColor:colors.border,overflow:"hidden"}} accessible accessibilityRole="progressbar"
-                accessibilityLabel={`Ocupação: ${status!.text}`} accessibilityValue={dadosAtuais(unidade)?{min:0,max:100,now:Math.min(100,Math.max(0,unidade.percentualOcupacao)),text:`${unidade.percentualOcupacao.toFixed(0)}%`}:{text:"Sem dados atuais"}}>
-                <View style={{height:6,backgroundColor:status!.color,width:dadosAtuais(unidade)?`${Math.min(100,Math.max(0,unidade.percentualOcupacao))}%`:"0%"}} />
+                accessibilityLabel="Ocupação da área monitorada" accessibilityValue={ocupacaoDisponivel?{min:0,max:100,now:Math.min(100,Math.max(0,unidade.percentualOcupacao)),text:`${unidade.percentualOcupacao.toFixed(0)}%`}:{text:"Sem dados atuais"}}>
+                <View style={{height:6,backgroundColor:status!.color,width:ocupacaoDisponivel?`${Math.min(100,Math.max(0,unidade.percentualOcupacao))}%`:"0%"}} />
             </View>
-            <Text style={ui.muted}>{dadosAtuais(unidade)?`● ${unidade.nivelOcupacao.replaceAll("_"," ")}`:"Sem dados atuais"}</Text>
+            <Text style={ui.muted}>{ocupacaoDisponivel?`● ${unidade.nivelOcupacao.replaceAll("_"," ")}`:"Sem dados atuais"}</Text>
             <View style={ui.card}>
                 <Text style={ui.sectionTitle}>Informações</Text>
                 <Text style={ui.muted}>Endereço</Text><Text style={ui.text}>{unidade.endereco}</Text>
                 <View style={{height:1,backgroundColor:colors.border}} />
                 <Text style={ui.muted}>Telefone</Text><Text style={ui.text}>{unidade.telefone||"Não informado"}</Text>
                 <Text style={ui.muted}>{unidade.tipo.replaceAll("_"," ")}</Text>
+                <Text style={ui.muted}>Horários de troca de turno (horário de Brasília)</Text>
+                <Text style={ui.text}>{horarios.length ? horarios.join(" · ") : "Horários ainda não cadastrados."}</Text>
             </View>
             <View style={ui.card}>
                 <Text style={ui.sectionTitle}>Fluxo da unidade</Text>
-                {unidade.statusMedicao==="ATUALIZADA" && unidade.ritmoOcupacao!=="DADOS_INSUFICIENTES" ? <><Text style={ui.text}>Média (30 min): {unidade.mediaUltimos30Minutos.toFixed(1)} pessoas</Text>
+                {dadosAtuais(unidade) && unidade.ritmoOcupacao!=="DADOS_INSUFICIENTES" ? <><Text style={ui.text}>Média (30 min): {unidade.mediaUltimos30Minutos.toFixed(1)} pessoas</Text>
                 <Text style={ui.text}>Tendência: {unidade.tendencia} · ritmo: {unidade.ritmoOcupacao.replaceAll("_"," ")}</Text></> : <Text style={ui.text}>Sem dados suficientes e atuais para estimar tendência.</Text>}
             </View>
+            <Button title={rotasVisiveis?"Ocultar opções de rota":"Traçar rota até a unidade"} secondary
+                onPress={()=>{setRotasVisiveis(visivel=>!visivel);setErroRota("");}}/>
+            {rotasVisiveis&&<View style={ui.card}>
+                <Button title="Abrir no Google Maps" onPress={()=>void abrirRota("maps",unidade.endereco)}/>
+                <Button title="Abrir no Waze" secondary onPress={()=>void abrirRota("waze",unidade.endereco)}/>
+                <ErrorNotice message={erroRota}/>
+            </View>}
             <View style={ui.card}>
                 <Text style={ui.sectionTitle}>Monitoramento</Text>
                 <Text style={ui.text}>Câmera: {unidade.statusCamera.replaceAll("_"," ")}</Text>
@@ -99,7 +144,7 @@ export default function UnitScreen({navigation,route}:NativeStackScreenProps<Roo
                 <Text style={ui.muted}>A contagem estima pessoas presentes na área enquadrada. Entradas e saídas aparecem na próxima amostra; não representa pessoas únicas atendidas nem tempo de espera.</Text>
             </View>
             <Button secondary title={estaFavoritado(id)?"Remover dos favoritos":"Adicionar aos favoritos"} onPress={()=>void alternarFavorito(unidade)}/>
-            <ManualCount id={id} capacidade={unidade.capacidadeAreaMonitorada} onSaved={()=>void buscarSituacaoUnidade(id).then(setUnidade).catch(()=>setError("Conferência salva. Não foi possível atualizar a tela; tente novamente."))}/>
+            <ManualCount id={id} onSaved={()=>void buscarSituacaoUnidade(id).then(setUnidade).catch(()=>setError("Conferência salva. Não foi possível atualizar a tela; tente novamente."))}/>
             <Button title="Avaliar unidade" onPress={()=>navigation.navigate("Review",{unidadeId:id})}/>
             <Text style={ui.title}>Avaliações {avaliacoes.length? `· ${media.toFixed(1)} / 5`:""}</Text>
             <ErrorNotice message={reviewError}/>{reviewError&&<Button title="Recarregar avaliações" secondary onPress={()=>setRetry(n=>n+1)}/>}

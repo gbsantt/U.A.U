@@ -77,6 +77,34 @@ class UAUIntegrationTest {
   var r=HttpClient.newHttpClient().send(b.POST(HttpRequest.BodyPublishers.ofString(json.writeValueAsString(body))).build(),HttpResponse.BodyHandlers.ofString());
   return new Result(r.statusCode(),r.body().isBlank()?null:json.readTree(r.body()),r.body());
  }
+ @Test void conferenciaAcimaDaCapacidadeApareceSemCameraEPermiteEditarUnidade()throws Exception{
+  long id=unit();
+  ok("PATCH","/unidades/"+id+"/ocupacao",admin,Map.of("quantidadePessoas",-1),400);
+  ok("PATCH","/unidades/"+id+"/ocupacao",admin,Map.of("quantidadePessoas",125),200);
+  var situacao=ok("GET","/unidades/"+id+"/situacao",null,null,200);
+  assertEquals(125.0,situacao.path("percentualOcupacao").asDouble());
+  assertEquals("LOTADO",situacao.path("nivelOcupacao").asText());
+  assertEquals("ATUALIZADA",situacao.path("statusMedicao").asText());
+  assertEquals("MANUAL",situacao.path("origemMedicao").asText());
+  assertEquals("SEM_CAMERA",situacao.path("statusCamera").asText());
+  assertEquals(125,ok("PUT","/unidades/"+id,admin,unitBody(),200).path("ocupacaoAtual").asInt());
+ }
+ @Test void horariosDeTrocaPertencemAUnidadeEPodemSerRemovidos()throws Exception{
+  var cadastro=new HashMap<>(unitBody());
+  cadastro.put("horariosTrocaTurno",List.of("24:00"));
+  ok("POST","/unidades",admin,cadastro,400);
+  cadastro.put("horariosTrocaTurno",List.of("19:00","07:00","19:00"));
+  long id=ok("POST","/unidades",admin,cadastro,201).path("unidade").path("id").asLong();
+  long outra=unit();
+  var horarios=ok("GET","/unidades/"+id+"/situacao",null,null,200).path("horariosTrocaTurno");
+  assertEquals(json.valueToTree(List.of("07:00","19:00")),horarios);
+  assertTrue(ok("GET","/unidades/"+outra+"/situacao",null,null,200).path("horariosTrocaTurno").isEmpty());
+  assertEquals(horarios,ok("PUT","/unidades/"+id,admin,unitBody(),200).path("horariosTrocaTurno"));
+  cadastro.put("horariosTrocaTurno",List.of("08:00"));
+  assertEquals("08:00",ok("PUT","/unidades/"+id,admin,cadastro,200).path("horariosTrocaTurno").get(0).asText());
+  cadastro.put("horariosTrocaTurno",List.of());
+  assertTrue(ok("PUT","/unidades/"+id,admin,cadastro,200).path("horariosTrocaTurno").isEmpty());
+ }
  @Test void reportRequiresAuthenticationAndUsesStoredHistory()throws Exception{
   long id=unit();
   ok("GET","/unidades/"+id+"/relatorio.pdf",null,null,401);

@@ -1,6 +1,7 @@
 package com.uau.backend.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import com.uau.backend.entity.TipoUnidade;
 
 public record UnidadeAtendimentoResponseDTO(
@@ -27,7 +28,8 @@ public record UnidadeAtendimentoResponseDTO(
 
         LocalDateTime ultimaAtualizacao,
 
-        TipoUnidade tipo
+        TipoUnidade tipo,
+        List<String> horariosTrocaTurno
 
 ) {
 }

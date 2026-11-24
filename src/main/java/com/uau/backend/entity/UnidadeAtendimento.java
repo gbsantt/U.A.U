@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "unidade_atendimento")
@@ -51,5 +52,17 @@ public class UnidadeAtendimento {
 
     @Column(nullable = false)
     private Integer capacidadeAreaMonitorada;
+
+    @Column(length = 143)
+    private String horariosTrocaTurno;
+
+    public List<String> getHorariosTrocaTurno() {
+        return horariosTrocaTurno == null || horariosTrocaTurno.isEmpty()
+            ? List.of() : List.of(horariosTrocaTurno.split(","));
+    }
+
+    public void setHorariosTrocaTurno(List<String> horarios) {
+        horariosTrocaTurno = String.join(",", horarios.stream().distinct().sorted().toList());
+    }
 
 }

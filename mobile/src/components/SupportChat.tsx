@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { appIsActive } from "../utils/activity";
 import { buscarSuporte, buscarSuporteAdmin, criarSuporte, listarMensagensSuporte, enviarMensagemSuporte, atualizarStatusSuporte } from "../service/api";
-import { MensagemSuporte, SolicitacaoSuporte, StatusSuporte, statusSuporte } from "../types/Suporte";
+import { MensagemSuporte, SolicitacaoSuporte, StatusSuporte, statusSuporte, rotulosStatusSuporte } from "../types/Suporte";
 
 export default function SupportChat({navigation,id,admin=false}:{navigation:any;id?:number;admin?:boolean}) {
     const ui=useUI();const {colors}=useTheme();const {usuario}=useAuth();
@@ -72,7 +72,7 @@ export default function SupportChat({navigation,id,admin=false}:{navigation:any;
             <Button title="Entrar" onPress={()=>navigation.navigate("Login")}/>
             {!admin&&<Button title="Criar conta" secondary onPress={()=>navigation.navigate("Register")}/>}
         </View>:<>
-            {data&&<Text style={ui.muted}>Conversa #{data.id} · {data.status.replaceAll("_"," ")}</Text>}
+            {data&&<Text style={ui.muted}>Conversa #{data.id} · {rotulosStatusSuporte[data.status]}</Text>}
             {admin&&owner&&<Text style={ui.muted}>{owner}</Text>}
             <ErrorNotice message={syncError}/>{syncError&&<Button title="Atualizar conversa" secondary onPress={()=>setRetry(n=>n+1)}/>}
             <ScrollView ref={scroll} style={{maxHeight:360,flexGrow:0}} contentContainerStyle={{gap:12,paddingVertical:8}} onContentSizeChange={()=>scroll.current?.scrollToEnd({animated:true})}>
@@ -85,7 +85,7 @@ export default function SupportChat({navigation,id,admin=false}:{navigation:any;
             <Text style={ui.muted}>Não envie senhas, códigos de acesso ou dados clínicos.</Text>
             <ErrorNotice message={error}/>
             <Button title="Enviar mensagem" busy={busy} disabled={!texto.trim()||!!id&&!data} onPress={()=>void enviar()}/>
-            {admin&&data&&<View style={ui.row}>{statusSuporte.map(s=><Button key={s} title={s.replaceAll("_"," ")} secondary={data.status!==s} disabled={busy||data.status===s} onPress={()=>void atualizar(s)}/>)}</View>}
+            {admin&&data&&<View style={ui.row}>{statusSuporte.map(s=><Button key={s} title={rotulosStatusSuporte[s]} secondary={data.status!==s} disabled={busy||data.status===s} onPress={()=>void atualizar(s)}/>)}</View>}
             {!admin&&id&&<Button title="Nova conversa" secondary onPress={()=>navigation.navigate("NovaSolicitacaoSuporte")}/>}
         </>}
     </ScreenLayout>;

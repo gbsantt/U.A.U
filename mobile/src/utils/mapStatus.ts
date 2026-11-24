@@ -5,7 +5,10 @@ export function statusNoMapa(unidade: Unidade, palette:Palette=colors) {
     if (!dadosAtuais(unidade)) {
         return { color: palette.offline, text: "Sem dados atuais" };
     }
-    const percentual = unidade.percentualOcupacao;
+    return statusDaOcupacao(unidade.percentualOcupacao, palette);
+}
+
+export function statusDaOcupacao(percentual: number, palette: Palette) {
     return {
         color: percentual >= 80 ? palette.danger : percentual >= 50 ? palette.warning : palette.success,
         text: `${percentual.toFixed(0)}% de ocupação`,

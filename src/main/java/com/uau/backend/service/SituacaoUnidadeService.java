@@ -19,14 +19,18 @@ public class SituacaoUnidadeService {
         var ids=unidades.stream().map(UnidadeAtendimento::getId).toList();
         var dispositivos=cameras.findByUnidadeAtendimentoIdIn(ids).stream()
             .collect(Collectors.groupingBy(d->d.getUnidadeAtendimento().getId()));
-        var recentes=historico.janela(ids,LocalDateTime.now().minusMinutes(30)).stream()
+        var agora=LocalDateTime.now();
+        var recentes=historico.janela(ids,agora.minusMinutes(30)).stream()
             .collect(Collectors.groupingBy(HistoricoOcupacaoRepository.Amostra::getUnidadeId));
         return unidades.stream().map(u-> {
             var ds=dispositivos.getOrDefault(u.getId(),List.of());
             var camera=ds.stream().filter(d->Boolean.TRUE.equals(d.getAtivo())).findFirst()
                 .orElseGet(()->ds.stream().min(Comparator.comparing(DispositivoCamera::getId)).orElse(null));
             var status=DispositivoCameraService.status(camera);
-            var hs=recentes.getOrDefault(u.getId(),List.of());
+            var amostras=recentes.getOrDefault(u.getId(),List.of());
+            var ultima=amostras.isEmpty()?null:amostras.getFirst();
+            var origem=ultima==null?null:ultima.getOrigem();
+            var hs=amostras.stream().filter(a->a.getOrigem()==OrigemMedicao.CAMERA).toList();
             double media=hs.stream().mapToInt(HistoricoOcupacaoRepository.Amostra::getQuantidadePessoas).average().orElse(0);
             // Disjoint windows avoid comparing samples against themselves.
             int n=Math.min(3,hs.size()/2);
@@ -38,10 +42,12 @@ public class SituacaoUnidadeService {
                 delta<=-10?RitmoOcupacao.ESVAZIANDO_RAPIDO:delta<=-3?RitmoOcupacao.ESVAZIANDO:RitmoOcupacao.ESTAVEL;
             var statusMedicao=camera==null || camera.getUltimaComunicacao()==null?StatusMedicao.SEM_DADOS:
                 status==StatusCamera.ONLINE?StatusMedicao.ATUALIZADA:StatusMedicao.DESATUALIZADA;
+            if(origem==OrigemMedicao.MANUAL && !ultima.getRegistradoEm().isBefore(agora.minusMinutes(6)))
+                statusMedicao=StatusMedicao.ATUALIZADA;
             double p=percentual(u);
             return new SituacaoUnidadeResponseDTO(u.getId(),u.getNome(),u.getEndereco(),u.getTelefone(),
                 u.getLatitude(),u.getLongitude(),u.getCapacidadeAreaMonitorada(),u.getOcupacaoAtual(),p,nivel(p),
-                media,tendencia,u.getUltimaAtualizacao(),statusMedicao,status,ritmo,u.getTipo());
+                media,tendencia,u.getUltimaAtualizacao(),statusMedicao,status,ritmo,u.getTipo(),u.getHorariosTrocaTurno(),origem);
         }).toList();
     }
     public static double percentual(UnidadeAtendimento u) {
