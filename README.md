@@ -73,3 +73,9 @@ As imagens foram editadas para demonstrar a câmera ativa com dados simulados de
 ## Como citar o projeto
 
 SANTOS, Gabriel Becca dos; ANDREATO, Matheus de Souza; FREITAS, Kevyn Fernandes. **UAU — Unidades de Atendimento de Urgência**. Software desenvolvido no projeto de TCC do grupo 10, 2026.
+
+Em caso de dúvidas entre em contato com hospeasy0@gmail.com ou com Kevyngames3@gmail.com ou com matheusandreato002@gmail.com 
+
+
+
+Para acessar o trabalho escrito do projeto: https://ric.cps.sp.gov.br/
